@@ -41,9 +41,6 @@ public class Frame extends javax.swing.JFrame {
         SSValor = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         LastInst = new javax.swing.JLabel();
-        Zeroflag = new javax.swing.JCheckBox();
-        Sinalflag = new javax.swing.JCheckBox();
-        Overflowflag = new javax.swing.JCheckBox();
         jLabel10 = new javax.swing.JLabel();
         CSValor = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
@@ -145,15 +142,6 @@ public class Frame extends javax.swing.JFrame {
         jLabel9.setText("Última Instrução executada:");
 
         LastInst.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
-
-        Zeroflag.setText("Zero Flag");
-        Zeroflag.setEnabled(false);
-
-        Sinalflag.setText("Sinal Flag");
-        Sinalflag.setEnabled(false);
-
-        Overflowflag.setText("Overflow Flag");
-        Overflowflag.setEnabled(false);
 
         jLabel10.setFont(new java.awt.Font("Ubuntu", 1, 24)); // NOI18N
         jLabel10.setText("CS:");
@@ -271,14 +259,7 @@ public class Frame extends javax.swing.JFrame {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(comboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(10, 10, 10)))
-                                .addContainerGap())))
-                    .addGroup(PainelLayout.createSequentialGroup()
-                        .addComponent(Zeroflag)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(Sinalflag)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(Overflowflag)
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                                .addContainerGap())))))
         );
         PainelLayout.setVerticalGroup(
             PainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -359,9 +340,9 @@ public class Frame extends javax.swing.JFrame {
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(20, 20, 20)
                         .addGroup(PainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(Zeroflag)
-                            .addComponent(Sinalflag)
-                            .addComponent(Overflowflag)
+//                            .addComponent(Zeroflag)
+//                            .addComponent(Sinalflag)
+//                            .addComponent(Overflowflag)
                             .addComponent(comboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel6))
                         .addGap(18, 18, 18)
@@ -385,13 +366,13 @@ public class Frame extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    private void ExecutarBotaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExecutarBotaoActionPerformed
+    private void ExecutarBotaoActionPerformed(java.awt.event.ActionEvent evt) {
         String opcode;
         //do{
             if((flag_para == 0) && !(IPVALOR.getText().isEmpty())){
                 int indice_linha = MemTable.getSelectedRow();
 
-                int end_real = proc.getIP(); //Integer.parseInt(IPVALOR.getText()); //proc.getIndex().get(indice_linha);
+                int end_real = proc.getIP();
                 try{
                     Instruction inst = (Instruction) proc.getMemory().get(end_real);
                     opcode = inst.getOpcode();
@@ -461,7 +442,7 @@ public class Frame extends javax.swing.JFrame {
             proc.setIP(Indices.get(MemTable.getSelectedRow()));
             IPVALOR.setText(String.valueOf(proc.getIP()));
         }
-    }//GEN-LAST:event_CarregarBotaoActionPerformed
+    }
 
     private void AbrirBotaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AbrirBotaoActionPerformed
         jFileChooser1 = new JFileChooser("/Users/lgcantarelli/Projects/z808-maquina");   //cria o jfilechooser
@@ -477,14 +458,8 @@ public class Frame extends javax.swing.JFrame {
             proc.setLig(arqv);
         }
         
-    }//GEN-LAST:event_AbrirBotaoActionPerformed
+    }
 
-    /**
-     * @param args the command line arguments
-     */
-
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel AXVALOR;
     private javax.swing.JButton AbrirBotao;
     private javax.swing.JLabel CSVALOR;
@@ -524,14 +499,11 @@ public class Frame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField ultimaInst;
-    // End of variables declaration//GEN-END:variables
-    // variaveis criadas
+
     private JFileChooser jFileChooser1;
     private File arqv = null;
     private int flag_para = 0;
     private Z808 proc;
-//    private String[] TamExtra ={"0", "10", "20", "30"};
-    
 
     private void atualiza_regsandflags() {
         AXVALOR.setText(String.valueOf(proc.getAX()));
@@ -543,24 +515,6 @@ public class Frame extends javax.swing.JFrame {
         DSVALOR.setText(String.valueOf(proc.getDS()));
         CSVALOR.setText(String.valueOf(proc.getCS()));
         SRVALOR.setText(String.valueOf(proc.getSR()));
-        if( (proc.getSR() == 1) || (proc.getSR() == 5)){
-            Sinalflag.setSelected(true);
-        }
-        else{
-            Sinalflag.setSelected(false);
-        }
-//        if( (proc.getSR() == 2) || (proc.getSR() == 6)){
-//            Zeroflag.setSelected(true);
-//        }
-//        else{
-//            Zeroflag.setSelected(false);
-//        }
-        if( (proc.getSR() == 5) || (proc.getSR() == 6)){
-            Overflowflag.setSelected(true);
-        }
-        else{
-            Overflowflag.setSelected(false);
-        }
     }
     
     private static class MyFilter extends FileFilter {

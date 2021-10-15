@@ -35,7 +35,7 @@ public class Flags {
         this.index_hlt = index_hlt;
     }
 
-    public inIntegert getCS() {//Pega Segmento de Código
+    public Integer getCS() {//Pega Segmento de Código
         return CS;
     }
 
