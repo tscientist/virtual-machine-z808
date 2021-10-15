@@ -7,9 +7,9 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.table.DefaultTableModel;
 
-public class Frame extends javax.swing.JFrame {
+public class Screen extends javax.swing.JFrame {
     DefaultTableModel model;
-    public Frame(Z808 proc) {
+    public Screen(Z808 proc) {
         super("Z808");
         initComponents();
         this.proc = proc;
