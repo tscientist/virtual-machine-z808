@@ -53,8 +53,7 @@ public class Frame extends javax.swing.JFrame {
         CSVALOR = new javax.swing.JLabel();
         SIVALOR = new javax.swing.JLabel();
         SSVALOR = new javax.swing.JLabel();
-        comboBox = new javax.swing.JComboBox();
-        jLabel6 = new javax.swing.JLabel();
+
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -167,9 +166,6 @@ public class Frame extends javax.swing.JFrame {
 
         SSVALOR.setFont(new java.awt.Font("Ubuntu", 1, 24)); // NOI18N
 
-        comboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] {"0", "10", "20", "30"}));
-
-        jLabel6.setText("Tamanho extra da pilha:");
 
         javax.swing.GroupLayout PainelLayout = new javax.swing.GroupLayout(Painel);
         Painel.setLayout(PainelLayout);
@@ -252,13 +248,7 @@ public class Frame extends javax.swing.JFrame {
                                             .addComponent(CSVALOR, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addComponent(SRVALOR, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addComponent(SIVALOR, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGap(0, 0, Short.MAX_VALUE))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PainelLayout.createSequentialGroup()
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(comboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(10, 10, 10)))
+                                        .addGap(0, 0, Short.MAX_VALUE)))
                                 .addContainerGap())))))
         );
         PainelLayout.setVerticalGroup(
@@ -339,13 +329,6 @@ public class Frame extends javax.swing.JFrame {
                         .addGap(23, 23, 23)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(20, 20, 20)
-                        .addGroup(PainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-//                            .addComponent(Zeroflag)
-//                            .addComponent(Sinalflag)
-//                            .addComponent(Overflowflag)
-                            .addComponent(comboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel6))
-                        .addGap(18, 18, 18)
                         .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(ultimaInst, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -402,7 +385,7 @@ public class Frame extends javax.swing.JFrame {
     private void CarregarBotaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CarregarBotaoActionPerformed
         if (arqv != null) {
             proc.loadFirstData();
-            int tam_extra = Integer.parseInt(comboBox.getSelectedItem().toString());  //pega valor selecionado na combobox pra criar a area extra de pilha
+            int tam_extra = 0;
             proc.setSP(proc.loadStack(tam_extra));
             SPVALOR.setText(String.valueOf(proc.getSP()));  //atualiza valor do reg sp com a pos do final da pilha
             this.model=new DefaultTableModel(){   //cria um default table model
