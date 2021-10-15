@@ -57,14 +57,14 @@ public class Screen extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        AbrirBotao.setText("Abrir");
+        AbrirBotao.setText("Open");
         AbrirBotao.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 AbrirBotaoActionPerformed(evt);
             }
         });
 
-        CarregarBotao.setText("Carregar");
+        CarregarBotao.setText("Load File");
         CarregarBotao.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 CarregarBotaoActionPerformed(evt);
@@ -76,7 +76,7 @@ public class Screen extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Endereço", "Instrução/Dado"
+                "Address", "Instruction"
             }
         ) {
             Class[] types = new Class [] {
@@ -121,7 +121,7 @@ public class Screen extends javax.swing.JFrame {
 
         SPValor.setFont(new java.awt.Font("Ubuntu", 1, 24)); // NOI18N
 
-        ExecutarBotao.setText("Executar");
+        ExecutarBotao.setText("RUN");
         ExecutarBotao.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 ExecutarBotaoActionPerformed(evt);
@@ -138,7 +138,7 @@ public class Screen extends javax.swing.JFrame {
 
         SSValor.setFont(new java.awt.Font("Ubuntu", 1, 24)); // NOI18N
 
-        jLabel9.setText("Última Instrução executada:");
+        jLabel9.setText("Last load instruction:");
 
         LastInst.setFont(new java.awt.Font("Ubuntu", 1, 15)); // NOI18N
 
@@ -395,8 +395,8 @@ public class Screen extends javax.swing.JFrame {
                 }
             } ;
             MemTable.setModel(model);   //atrela o modelo criado a jtable MemTable
-            model.addColumn("Endereço");    //adiciona coluna de endereço
-            model.addColumn("Instrução/dado");  //adiciona coluna de instrucao/dados
+            model.addColumn("Address");    //adiciona coluna de endereço
+            model.addColumn("Instruction");  //adiciona coluna de instrucao/dados
             MemTable.getColumnModel().getColumn(0).setPreferredWidth(30);  //seta largura da coluna 0
             MemTable.getColumnModel().getColumn(1).setPreferredWidth(110);  //seta largura da coluna 1
 
