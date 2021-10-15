@@ -8,10 +8,6 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.table.DefaultTableModel;
 
 public class Frame extends javax.swing.JFrame {
-
-    /**
-     * Creates new form Frame
-     */
     DefaultTableModel model;
     public Frame(Z808 proc) {
         super("Z808");
@@ -395,15 +391,15 @@ public class Frame extends javax.swing.JFrame {
             if((flag_para == 0) && !(IPVALOR.getText().isEmpty())){
                 int indice_linha = MemTable.getSelectedRow();
 
-                int end_real = proc.getIP(); //Integer.parseInt(IPVALOR.getText()); //proc.getIndices().get(indice_linha);
+                int end_real = proc.getIP(); //Integer.parseInt(IPVALOR.getText()); //proc.getIndex().get(indice_linha);
                 try{
-                    Instrucao inst = (Instrucao)proc.getMemoria().get(end_real);
+                    Instruction inst = (Instruction) proc.getMemory().get(end_real);
                     opcode = inst.getOpcode();
-                    int end_alterado = proc.executa(inst, ultimaInst, end_real);
+                    int end_alterado = proc.run(inst, ultimaInst, end_real);
                     atualiza_regsandflags();
                     if( end_alterado != -1){      //precisa atualizar a tabela de memoria
-                        int linha = proc.getIndices().indexOf(end_alterado);
-                        MemTable.setValueAt(proc.getMemoria().get(end_alterado).getValue(), linha, 1);
+                        int linha = proc.getIndex().indexOf(end_alterado);
+                        MemTable.setValueAt(proc.getMemory().get(end_alterado).getValue(), linha, 1);
                     }
 
                 }
@@ -415,7 +411,7 @@ public class Frame extends javax.swing.JFrame {
                     flag_para = 1;
                 }
                 else{
-                    int prox_linha = proc.getIndices().indexOf(Integer.parseInt(IPVALOR.getText()));
+                    int prox_linha = proc.getIndex().indexOf(Integer.parseInt(IPVALOR.getText()));
                     MemTable.setRowSelectionInterval(prox_linha, prox_linha);
                     flag_para = 0;
                 }
@@ -423,10 +419,10 @@ public class Frame extends javax.swing.JFrame {
     }//GEN-LAST:event_ExecutarBotaoActionPerformed
 
     private void CarregarBotaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CarregarBotaoActionPerformed
-        if( arqv != null){
-            proc.carregaDados1();
+        if (arqv != null) {
+            proc.loadFirstData();
             int tam_extra = Integer.parseInt(comboBox.getSelectedItem().toString());  //pega valor selecionado na combobox pra criar a area extra de pilha
-            proc.setSP(proc.carregaPilha(tam_extra));
+            proc.setSP(proc.loadStack(tam_extra));
             SPVALOR.setText(String.valueOf(proc.getSP()));  //atualiza valor do reg sp com a pos do final da pilha
             this.model=new DefaultTableModel(){   //cria um default table model
                 @Override
@@ -440,17 +436,17 @@ public class Frame extends javax.swing.JFrame {
             MemTable.getColumnModel().getColumn(0).setPreferredWidth(30);  //seta largura da coluna 0
             MemTable.getColumnModel().getColumn(1).setPreferredWidth(110);  //seta largura da coluna 1
 
-            ArrayList<Integer> Indices = proc.getIndices();
-            Hashtable<Integer,Key> Memoria = proc.getMemoria();
+            ArrayList<Integer> Indices = proc.getIndex();
+            Hashtable<Integer,Key> Memoria = proc.getMemory();
             for(int i=0; i < Indices.size(); i++){
                 int end = Indices.get(i);
                 Key algo = Memoria.get(end);
                 try{
-                    Dado d = (Dado)algo;
+                    Value d = (Value)algo;
                     model.addRow(new String[]{String.valueOf(end),String.valueOf(d.getValue())});
                 }
                 catch(ClassCastException e){
-                    Instrucao inst = (Instrucao)algo;
+                    Instruction inst = (Instruction) algo;
                     String opcode = inst.getOpcode();
                     if(inst.getType() == 1){
                         model.addRow(new String[]{String.valueOf(end),opcode});
@@ -534,7 +530,7 @@ public class Frame extends javax.swing.JFrame {
     private File arqv = null;
     private int flag_para = 0;
     private Z808 proc;
-    private String[] TamExtra ={"0", "10", "20", "30"};
+//    private String[] TamExtra ={"0", "10", "20", "30"};
     
 
     private void atualiza_regsandflags() {
@@ -553,12 +549,12 @@ public class Frame extends javax.swing.JFrame {
         else{
             Sinalflag.setSelected(false);
         }
-        if( (proc.getSR() == 2) || (proc.getSR() == 6)){
-            Zeroflag.setSelected(true);
-        }
-        else{
-            Zeroflag.setSelected(false);
-        }
+//        if( (proc.getSR() == 2) || (proc.getSR() == 6)){
+//            Zeroflag.setSelected(true);
+//        }
+//        else{
+//            Zeroflag.setSelected(false);
+//        }
         if( (proc.getSR() == 5) || (proc.getSR() == 6)){
             Overflowflag.setSelected(true);
         }
