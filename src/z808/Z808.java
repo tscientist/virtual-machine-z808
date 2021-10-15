@@ -29,11 +29,11 @@ public class Z808 {
     private int qtde_dados1, qtde_dados2, qtde_inst1, qtde_inst2, index_hlt;
 
     private ArrayList<Integer> Indices;
-    private Hashtable<Integer,Thing> Memoria;//Hashtable<Key,Value>
+    private Hashtable<Integer,Key> Memoria;//Hashtable<Key,Value>
     private File entrada;
 
     public Z808() {
-        this.Memoria = new Hashtable< Integer,Thing >();
+        this.Memoria = new Hashtable< Integer,Key >();
         this.Indices = new ArrayList< Integer >();
     }
 
@@ -165,11 +165,11 @@ public class Z808 {
         this.Indices = Indices;
     }
 
-    public Hashtable<Integer, Thing> getMemoria() {
+    public Hashtable<Integer, Key> getMemoria() {
         return Memoria;
     }
 
-    public void setMemoria(Hashtable<Integer, Thing> Memoria) {
+    public void setMemoria(Hashtable<Integer, Key> Memoria) {
         this.Memoria = Memoria;
     }
 
@@ -210,18 +210,18 @@ public class Z808 {
     
     for(int i = 0; i < Indices.size(); i++){
         int key = Indices.get(i);
-        Thing algo = Memoria.get(key);
+        Key algo = Memoria.get(key);
         try{
             Dado d = (Dado)algo;
-            System.out.print("Pos: "+key+"Dado: "+d.getValor()+"\n");
+            System.out.print("Pos: "+key+"Dado: "+d.getValue()+"\n");
         }
         catch(ClassCastException e){
             Instrucao inst = (Instrucao)algo;
-            if(inst.getTipo() == 1){
+            if(inst.getType() == 1){
                 System.out.print("Pos: "+key+"Instrucao: "+inst.getOpcode()+"\n");
             }
             else{
-                System.out.print("Pos: "+key+"Instrucao: "+inst.getOpcode()+" "+inst.getValor()+"\n");
+                System.out.print("Pos: "+key+"Instrucao: "+inst.getOpcode()+" "+inst.getValue()+"\n");
             }
         }
     }
@@ -300,7 +300,7 @@ public class Z808 {
 
     public int executa(Instrucao inst, JTextField label, int endereco_real) {
         // qqer n > 0 = atualiza tab mem , -1 = n precisa atualizar
-        int tipo = inst.getTipo();
+        int tipo = inst.getType();
         //tipo 1 = sem campo valor, tipo 2 = com campo valor
 
         String opcode = inst.getOpcode();
@@ -448,8 +448,8 @@ public class Z808 {
                 System.out.println("tipo 1 nono if"+ opcode);
 
                 int end = SP;
-                Thing algo = Memoria.get(end);
-                IP = algo.getValor();
+                Key algo = Memoria.get(end);
+                IP = algo.getValue();
                 SP = SP + 2;                    //nao sei se ret altera o valor do stack pointer..
                 label.setText("RET");
                 return -1;
@@ -530,15 +530,15 @@ public class Z808 {
                 System.out.println("tipo 1 - 16 if"+ opcode);
 
                 if(opcode.charAt(1) == 'B'){
-                    AX = Memoria.get(SI).getValor();
+                    AX = Memoria.get(SI).getValue();
                     ajusta_flags(AX);
                     IP = IP + 2;
                     label.setText("MOV AX,"+"["+SI+"]");
                     return -1;
                 }
                 else{                 //vai alterar algo na memoria mov [si],ax
-                    Thing algo = Memoria.get(SI);
-                    algo.setValor(AX);
+                    Key algo = Memoria.get(SI);
+                    algo.setValue(AX);
                     IP = IP +2;
                     label.setText("MOV ["+SI+"],AX");
                     return SI;
@@ -551,7 +551,7 @@ public class Z808 {
 
                 if (opcode.charAt(1) == '8') {  // pop ax
                     try{
-                        AX = Memoria.get(SP).getValor();
+                        AX = Memoria.get(SP).getValue();
                         SP = SP +2;
                         label.setText("POP AX");
                     }
@@ -565,8 +565,8 @@ public class Z808 {
                     SP = SP -2;
                     
                     if ( SP > index_hlt) {                        //só pode empilhar se a pilha nao estiver invadindo area de dados, delimitada pelo indice do hlt
-                        Thing algo = Memoria.get(SP);
-                        algo.setValor(AX);
+                        Key algo = Memoria.get(SP);
+                        algo.setValue(AX);
                         label.setText("PUSH AX");
                         IP = IP +1;       // IP +1 pq é uma instrucao de um byte só
                         return SP;
@@ -586,37 +586,37 @@ public class Z808 {
         else{  //INSTRUÇÕES DE TIPO 2 - TEM CAMPO VALOR CTE OU MEM
             /* INSTRUÇÕES ARITMÉTICAS */
             if(opcode.equalsIgnoreCase("05")){  // add ax,cte
-                AX = AX + inst.getValor();
+                AX = AX + inst.getValue();
                 ajusta_flags(AX);
-                label.setText("ADD AX,#"+inst.getValor());
+                label.setText("ADD AX,#"+inst.getValue());
                 IP = IP +2;
                 return -1;
             } else if (opcode.equalsIgnoreCase("2D")){   // sub ax,cte
-                AX = AX - inst.getValor();
+                AX = AX - inst.getValue();
                 ajusta_flags(AX);
-                label.setText("SUB AX,#"+inst.getValor());
+                label.setText("SUB AX,#"+inst.getValue());
                 IP = IP +2;
                 return -1;
             }
             
             /* INSTRUÇÕES LÓGICAS */
             else if (opcode.equalsIgnoreCase("25")) {   // and ax,cte
-                AX = AX & inst.getValor();
+                AX = AX & inst.getValue();
                 ajusta_flags(AX);
-                label.setText("AND AX,#"+inst.getValor());
+                label.setText("AND AX,#"+inst.getValue());
                 IP = IP +2;
                 return -1;
             } else if (opcode.equalsIgnoreCase("0D")) {   // or ax,cte
-                AX = AX | inst.getValor();
+                AX = AX | inst.getValue();
                 ajusta_flags(AX);
-                label.setText("OR AX,#"+inst.getValor());
+                label.setText("OR AX,#"+inst.getValue());
                 IP = IP +2;
                 return -1;
             }
             else if(opcode.equalsIgnoreCase("35")){  // xor ax,cte
-                AX = AX ^ inst.getValor();
+                AX = AX ^ inst.getValue();
                 ajusta_flags(AX);
-                label.setText("XOR AX,#"+inst.getValor());
+                label.setText("XOR AX,#"+inst.getValue());
                 IP = IP +2;
                 return -1;
             }
@@ -624,46 +624,46 @@ public class Z808 {
             else if( opcode.matches("7[45A]")){  // jz end, jnz end ou jp end
                 if(opcode.charAt(1) == '4'){  // jz end
                     switch(SR){
-                        case 2: IP = inst.getValor(); break;
-                        case 6: IP = inst.getValor(); break;
+                        case 2: IP = inst.getValue(); break;
+                        case 6: IP = inst.getValue(); break;
                         default  : IP = IP +2; break;
                     }
-                    label.setText("JZ "+inst.getValor());
+                    label.setText("JZ "+inst.getValue());
                     return -1;
                 }
                 else if(opcode.charAt(1) == '5'){  // jnz end
                     switch(SR){
-                        case 0: IP = inst.getValor(); break;
-                        case 1: IP = inst.getValor(); break;
-                        case 4: IP = inst.getValor(); break;
-                        case 5: IP = inst.getValor(); break;
+                        case 0: IP = inst.getValue(); break;
+                        case 1: IP = inst.getValue(); break;
+                        case 4: IP = inst.getValue(); break;
+                        case 5: IP = inst.getValue(); break;
                         default : IP = IP +2; break;
                     }
-                    label.setText("JNZ "+inst.getValor());
+                    label.setText("JNZ "+inst.getValue());
                     return -1;
                 }
                 else{  // jp end
                     switch(SR){
-                        case 0: IP = inst.getValor(); break;
-                        case 2: IP = inst.getValor(); break;
-                        case 4: IP = inst.getValor(); break;
-                        case 6: IP = inst.getValor(); break;
+                        case 0: IP = inst.getValue(); break;
+                        case 2: IP = inst.getValue(); break;
+                        case 4: IP = inst.getValue(); break;
+                        case 6: IP = inst.getValue(); break;
                         default : IP = IP +2; break;
                     }
-                    label.setText("JP "+inst.getValor());
+                    label.setText("JP "+inst.getValue());
                     return -1;
                 }
             } else if (opcode.matches("E[B8]")) {   // jmp end ou call end
                 if (opcode.charAt(1) == 'B'){  // jmp end
-                    IP = inst.getValor();
-                    label.setText("JMP " + inst.getValor());
+                    IP = inst.getValue();
+                    label.setText("JMP " + inst.getValue());
                     return -1;
                 } else {   // call end
                     SP = SP - 2;
-                    Thing algo = Memoria.get(SP);
-                    algo.setValor(IP + 2);
-                    IP = inst.getValor();
-                    label.setText("CALL "+inst.getValor());
+                    Key algo = Memoria.get(SP);
+                    algo.setValue(IP + 2);
+                    IP = inst.getValue();
+                    label.setText("CALL "+inst.getValue());
                     return SP;
                 }
             }
@@ -673,40 +673,40 @@ public class Z808 {
                 IP = IP +2;
                 if(opcode.charAt(1) == '1'){  // mov ax,mem
                     //imprimeMemoria();
-                    int valor = Memoria.get(endereco_real).getValor();
+                    int valor = Memoria.get(endereco_real).getValue();
                     AX = valor;
                     ajusta_flags(AX);
-                    label.setText("MOV AX,"+inst.getValor());
+                    label.setText("MOV AX,"+inst.getValue());
                     return -1;
                 }
                 else{  // mov mem, ax
-                    Thing algo = Memoria.get(inst.getValor());
-                    algo.setValor(AX);
-                    label.setText("MOV "+inst.getValor()+",AX");
-                    return inst.getValor();
+                    Key algo = Memoria.get(inst.getValue());
+                    algo.setValue(AX);
+                    label.setText("MOV "+inst.getValue()+",AX");
+                    return inst.getValue();
                 }
             }
             else if(opcode.matches("8[B9]84")){   // mov ax,mem[si]  ou mov mem[si],ax
-                int end_real = SI + inst.getValor();
+                int end_real = SI + inst.getValue();
                 IP = IP +3;
                 if(opcode.charAt(1) == 'B'){  // mov ax,mem[si]
-                    AX = Memoria.get(end_real).getValor();
+                    AX = Memoria.get(end_real).getValue();
                     ajusta_flags(AX);
-                    label.setText("MOV AX,"+inst.getValor()+"["+SI+"]");
+                    label.setText("MOV AX,"+inst.getValue()+"["+SI+"]");
                     return -1;
                 }
                 else{  // mov mem[si],ax
-                    Thing algo = Memoria.get(end_real);
-                    algo.setValor(AX);
-                    label.setText("MOV "+inst.getValor()+"["+SI+"], AX");
+                    Key algo = Memoria.get(end_real);
+                    algo.setValue(AX);
+                    label.setText("MOV "+inst.getValue()+"["+SI+"], AX");
                     return end_real;
                 }
             }
             else if(opcode.equalsIgnoreCase("B8")){   // mov ax,cte
-                AX = inst.getValor();
+                AX = inst.getValue();
                 ajusta_flags(AX);
                 IP = IP +2;
-                label.setText("MOV AX,#"+inst.getValor());
+                label.setText("MOV AX,#"+inst.getValue());
                 return -1;
             }
             else{

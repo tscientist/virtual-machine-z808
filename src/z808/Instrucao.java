@@ -1,23 +1,23 @@
 
 package z808;
 
-public class Instrucao extends Thing {
-    private int tipo; //tipo 1 = sem campo valor, tipo 2 = com campo valor
-    public Instrucao(String opcode, int valor, int tipo){
-        super(opcode, valor);
-        this.tipo = tipo;
+public class Instrucao extends Key {
+    private Integer type; //tipo 1 = sem campo valor, tipo 2 = com campo valor
+    public Instrucao(String opcode, Integer value, Integer type){
+        super(opcode, value);
+        this.type = type;
     }
     
-    public Instrucao(String opcode, int tipo){
+    public Instrucao(String opcode, Integer type){
         super(opcode);
-        this.tipo = tipo;
+        this.type = type;
     }
 
-    public int getTipo() {
-        return tipo;
+    public int getType() {
+        return type;
     }
 
-    public void setTipo(int tipo) {
-        this.tipo = tipo;
+    public void setType(Integer type) {
+        this.type = type;
     }
 }

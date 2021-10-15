@@ -1,7 +1,7 @@
 package z808;
 
-public class Dado extends Thing {
-    public Dado(int valor) {
-        super(valor);
+public class Dado extends Key {
+    public Dado(Integer value) {
+        super(value);
     }
 }

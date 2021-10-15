@@ -403,7 +403,7 @@ public class Frame extends javax.swing.JFrame {
                     atualiza_regsandflags();
                     if( end_alterado != -1){      //precisa atualizar a tabela de memoria
                         int linha = proc.getIndices().indexOf(end_alterado);
-                        MemTable.setValueAt(proc.getMemoria().get(end_alterado).getValor(), linha, 1);
+                        MemTable.setValueAt(proc.getMemoria().get(end_alterado).getValue(), linha, 1);
                     }
 
                 }
@@ -441,22 +441,22 @@ public class Frame extends javax.swing.JFrame {
             MemTable.getColumnModel().getColumn(1).setPreferredWidth(110);  //seta largura da coluna 1
 
             ArrayList<Integer> Indices = proc.getIndices();
-            Hashtable<Integer,Thing> Memoria = proc.getMemoria();
+            Hashtable<Integer,Key> Memoria = proc.getMemoria();
             for(int i=0; i < Indices.size(); i++){
                 int end = Indices.get(i);
-                Thing algo = Memoria.get(end);
+                Key algo = Memoria.get(end);
                 try{
                     Dado d = (Dado)algo;
-                    model.addRow(new String[]{String.valueOf(end),String.valueOf(d.getValor())});
+                    model.addRow(new String[]{String.valueOf(end),String.valueOf(d.getValue())});
                 }
                 catch(ClassCastException e){
                     Instrucao inst = (Instrucao)algo;
                     String opcode = inst.getOpcode();
-                    if(inst.getTipo() == 1){
+                    if(inst.getType() == 1){
                         model.addRow(new String[]{String.valueOf(end),opcode});
                     }
                     else{
-                        model.addRow(new String[]{String.valueOf(end),opcode+" "+inst.getValor()});
+                        model.addRow(new String[]{String.valueOf(end),opcode+" "+inst.getValue()});
                     }
                 }
             }
