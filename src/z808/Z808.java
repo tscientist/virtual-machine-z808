@@ -54,24 +54,20 @@ public class Z808 extends Flags {
     public void loadFirstData() { //pega os primeiros 4 valores do arquivo
         try {
             Scanner sc = new Scanner(new FileReader(entrada)).useDelimiter("\\||\\n");
+            Integer nextPosition = 0;
 
             qtde_dados1 = Integer.parseInt(sc.next());
-            System.out.println("qtde_dados1 " + qtde_dados1);
             qtde_inst1 = Integer.parseInt(sc.next());
-            System.out.println("qtde_inst1 " + qtde_inst1);
             qtde_dados2 = Integer.parseInt(sc.next());
-            System.out.println("qtde_dados2 " + qtde_dados2);
             qtde_inst2 = Integer.parseInt(sc.next());
-            System.out.println("qtde_inst2 " + qtde_inst2);
 
-            Integer nextPosition = 0;
+
             for (int i = 0; i < qtde_dados1; i++) {
-                Integer value = Integer.parseInt(sc.next());//0000
+                Integer value = Integer.parseInt(sc.next());
                 index.add(nextPosition);
-                Value newValue = new Value(value);//0000
-                System.out.println("valor " + value);
+                Value newValue = new Value(value);
                 memory.put(nextPosition, newValue);
-                nextPosition = nextPosition + 2;//anda as posições de 2 em 2
+                nextPosition = nextPosition + 2;
             }
             loadInstructions(sc, nextPosition, qtde_inst1);
 
@@ -81,37 +77,30 @@ public class Z808 extends Flags {
     }
 
     private void loadInstructions(Scanner sc, Integer flag, Integer qtde_inst) { //carrega instruções
-        System.out.println("qtde_inst " + qtde_inst);
+        Integer value;
 
         for (int cont = 0; cont < qtde_inst; cont++ ){
             StringTokenizer st = new StringTokenizer(sc.next());
             String opcode;
-            int cont_tokens = st.countTokens();
-            if (cont_tokens == 1) { //Se é só 1 palavra
+
+            if (st.countTokens() == 1) { //1 token
                 opcode = st.nextToken();
                 index.add(flag);
-                Instruction nova = new Instruction(opcode, 1);
-                memory.put(flag, nova);
-                if (opcode.equalsIgnoreCase("F4") ||
-                        opcode.equalsIgnoreCase("58") ||
-                        opcode.equalsIgnoreCase("50") ||
-                        opcode.equalsIgnoreCase("9D") ||
-                        opcode.equalsIgnoreCase("9C") ||
-                        opcode.equalsIgnoreCase("C3")){
-                    if (opcode.equalsIgnoreCase("F4")){
-                        index_hlt = flag;
-                    }
+                Instruction new_instruction = new Instruction(opcode, 1);
+                memory.put(flag, new_instruction);
+                if (opcode.equals("F4") || opcode.equals("58") || opcode.equals("50") || opcode.equals("9D") || opcode.equals("9C") || opcode.equals("C3")) {
+                    index_hlt = (opcode.equals("F4")) ? flag : index_hlt;
                     flag++;
-                } else {   //eh uma Instruction de dois bytes, mas sem cte ou mem
+                } else {//2 bytes sem memória
                     flag = flag + 2;
                 }
-            } else {   //tem dois tokens, pode ser 2 bytes EB mem, ou 3 bytes 8984 mem
+            } else {//2 tokens
                 opcode = st.nextToken();
-                int valor = Integer.parseInt(st.nextToken());
+                value = Integer.parseInt(st.nextToken());
                 index.add(flag);
-                Instruction nova = new Instruction(opcode, valor,2);
-                memory.put(flag, nova);
-                if (opcode.equalsIgnoreCase("8984") || opcode.equalsIgnoreCase("8B84")){
+                Instruction new_instruction = new Instruction(opcode, value, 2);
+                memory.put(flag, new_instruction);
+                if (opcode.equals("8984") || opcode.equals("8B84")){
                     flag = flag + 3;//3 bytes
                 } else {
                     flag = flag + 2;//2 bytes
@@ -137,7 +126,7 @@ public class Z808 extends Flags {
     }
 
     public Integer loadStack(Integer size) {
-        Integer nextPosition = index.get(index.size() - 1) + 1;//2º segmento TEM q terminar com hlt
+        Integer nextPosition = index.get(index.size() - 1) + 1;
 
        for (int cont = 0; cont < size; cont++) {
            Integer value = 0;
@@ -147,7 +136,7 @@ public class Z808 extends Flags {
            nextPosition = nextPosition + 2;
        }
 
-       return nextPosition;
+       return nextPosition;//terminar com hlt
     }
 
     public int run(Instruction inst, JTextField label, Integer real_address) {
