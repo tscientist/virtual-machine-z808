@@ -1,26 +1,22 @@
 package z808.z808;
 
 public class Flags {
-    public int SP = 0;// SP-STACK POINTER,
-    public int IP = 0;// IP-INSTRUCTION POINTER
-    public int AX = 0;// AX-OPERANDO DESTINO/FONTE
-    public int DX = 0;// DX-OPERANDO FONTE
-    public int SI = 0;// SI-ÍNDICE
-    public int DS = 0;// DS-Segmento de Dados
-    public int SS = 0;// SS-Segmento de Pilha
-    public int CS = 0;//CS-Segmento de Código
-    public int ZF = 0;
-    public int SF = 0; // ZF-ZERO, SF-SINAL
-    public int SR = 0;//SR-registrador de status, tem as flags OF,ZF e SF (as demais nao foram implementadas)
-    public int qtde_dados1, qtde_dados2, qtde_inst1, qtde_inst2, index_hlt;
+    public Integer SP;// SP-STACK POINTER,
+    public Integer IP;// IP-INSTRUCTION POINTER
+    public Integer AX;// AX-OPERANDO DESTINO/FONTE
+    public Integer DX;// DX-OPERANDO FONTE
+    public Integer SI;// SI-ÍNDICE
+    public Integer DS;// DS-Segmento de Dados
+    public Integer SS;// SS-Segmento de Pilha
+    public Integer CS;//CS-Segmento de Código
+    public Integer ZF;
+    public Integer SF; // ZF-ZERO, SF-SINAL
+    public Integer SR;//SR-registrador de status, tem as flags OF,ZF e SF (as demais nao foram implementadas)
+    public Integer qtde_dados1, qtde_dados2, qtde_inst1, qtde_inst2, index_hlt;
 
     public Flags(Integer qtde_dados1, Integer qtde_dados2, Integer qtde_inst1, Integer qtde_inst2, Integer index_hlt,
-                 Integer SP, Integer IP, Integer AX, Integer DX, Integer SI, Integer DS, Integer SS, Integer CS, Integer ZF, Integer SF, Integer SR) {
-        this.qtde_dados1 = qtde_dados1;
-        this.qtde_dados2 = qtde_dados2;
-        this.qtde_inst1 = qtde_inst1;
-        this.qtde_inst2 = qtde_inst2;
-        this.index_hlt = index_hlt;
+        Integer SP, Integer IP, Integer AX, Integer DX, Integer SI, Integer DS, Integer SS, Integer CS, Integer ZF, Integer SF, Integer SR) {
+
         this.SP = SP;
         this.IP = IP;
         this.AX = AX;
@@ -32,9 +28,14 @@ public class Flags {
         this.ZF = ZF;
         this.SF = SF;
         this.SR = SR;
+        this.qtde_dados1 = qtde_dados1;
+        this.qtde_dados2 = qtde_dados2;
+        this.qtde_inst1 = qtde_inst1;
+        this.qtde_inst2 = qtde_inst2;
+        this.index_hlt = index_hlt;
     }
 
-    public int getCS() {//Pega Segmento de Código
+    public inIntegert getCS() {//Pega Segmento de Código
         return CS;
     }
 
@@ -154,10 +155,8 @@ public class Flags {
         this.qtde_inst2 = qtde_inst2;
     }
 
-    public void updateFlags(int destino) {
-        if ((destino > Short.MAX_VALUE) || (destino < Short.MIN_VALUE)) {
-            SR = SR | 4;
-        }
+    public void updateFlags(Integer destino) {
+        if ((destino > Short.MAX_VALUE) || (destino < Short.MIN_VALUE)) SR = SR | 4;
 
         if (destino == 0) {
             ZF = 1;
@@ -165,7 +164,7 @@ public class Flags {
             SR = SR | 2;
             SR = SR & 6;
         } else {
-            ZF = 0;// SR = SR & 5;
+            ZF = 0;
             if (destino > 0) {
                 SF = 0;
                 SR = SR & 4;
@@ -179,44 +178,40 @@ public class Flags {
 
     public String updateBinString(String bin_string) {
         StringBuilder sb = new StringBuilder();
-        int dif = 16 - bin_string.length();
-        int cont = 0;
-        if( dif > 0){
-            while(cont < dif){
+        Integer dif = 16 - bin_string.length();
+
+        if (dif > 0) {
+            for (int i = 0; i < dif; i++){
                 sb.append('0');
-                cont++;
             }
             return sb.toString().concat(bin_string);
-        } else if( dif < 0){
-            return bin_string.substring(bin_string.length()-16, bin_string.length());
-        } else{
+        } else if (dif < 0){
+            return bin_string.substring(bin_string.length() - 16, bin_string.length());
+        } else {
             return bin_string;
         }
     }
 
     public String update32bitString(String res_inteira) {
         StringBuilder sb = new StringBuilder();
-        int dif = 32 - res_inteira.length();
-        int cont = 0;
-        if( dif > 0){
-            while(cont < dif){
+        Integer dif = 32 - res_inteira.length();
+
+        if (dif > 0){
+            for (int i = 0; i < dif; i++){
                 sb.append('0');
-                cont++;
             }
             return sb.toString().concat(res_inteira);
-        }
-        else{
+        } else{
             return res_inteira;
         }
     }
 
     public String reverseBinString(String str) {
         StringBuilder sb = new StringBuilder();
-        for(int i = 0; i < str.length(); i++){
-            if(str.charAt(i) == '0'){
+        for (int i = 0; i < str.length(); i++) {
+            if (str.charAt(i) == '0') {
                 sb.append('1');
-            }
-            else{
+            } else {
                 sb.append('0');
             }
         }

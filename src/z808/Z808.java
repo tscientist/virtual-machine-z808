@@ -61,7 +61,6 @@ public class Z808 extends Flags {
             qtde_dados2 = Integer.parseInt(sc.next());
             qtde_inst2 = Integer.parseInt(sc.next());
 
-
             for (int i = 0; i < qtde_dados1; i++) {
                 Integer value = Integer.parseInt(sc.next());
                 index.add(nextPosition);
