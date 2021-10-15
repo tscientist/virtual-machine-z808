@@ -1,5 +1,7 @@
 package z808;
 
+import z808.z808.Flags;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -14,149 +16,17 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JOptionPane;
 
-public class Z808 {
-    private int SP = 0;// SP-STACK POINTER,
-    private int IP = 0;// IP-INSTRUCTION POINTER
-    private int AX = 0;// AX-OPERANDO DESTINO/FONTE
-    private int DX = 0;// DX-OPERANDO FONTE
-    private int SI = 0;// SI-ÍNDICE
-    private int DS = 0;// DS-Segmento de Dados
-    private int SS = 0;// SS-Segmento de Pilha
-    private int CS = 0;//CS-Segmento de Código
-    private int ZF = 0;
-    private int SF = 0; // ZF-ZERO, SF-SINAL
-    private int SR = 0;//SR-registrador de status, tem as flags OF,ZF e SF (as demais nao foram implementadas)
-    private int qtde_dados1, qtde_dados2, qtde_inst1, qtde_inst2, index_hlt;
-
+public class Z808 extends Flags {
     private ArrayList<Integer> index;
     private Hashtable<Integer,Key> memory;//Hashtable<Key,Value>
     private File entrada;
 
-    public Z808() {
+    public Z808(Integer qtde_dados1, Integer qtde_dados2, Integer qtde_inst1, Integer qtde_inst2, Integer index_hlt,
+                Integer SP, Integer IP, Integer AX, Integer DX, Integer SI, Integer DS, Integer SS, Integer CS, Integer ZF, Integer SF, Integer SR) {
+        super(qtde_dados1, qtde_dados2, qtde_inst1, qtde_inst2, index_hlt, SP, IP, AX, DX, SI, DS, SS, CS, ZF, SF, SR);
         this.memory = new Hashtable<Integer, Key>();
         this.index = new ArrayList<Integer>();
     }
-
-    public int getCS() {//Pega Segmento de Código
-        return CS;
-    }
-
-    public void setCS(int CS) {//Adiciona Segmento de Código
-        this.CS = CS;
-    }
-
-    public int getSR() {
-        return SR;
-    }
-
-    public void setSR(int SR) {
-        this.SR = SR;
-    }
-
-    public int getDS() {
-        return DS;
-    }
-
-    public void setDS(int DS) {
-        this.DS = DS;
-    }
-
-    public int getSS() {
-        return SS;
-    }
-
-    public void setSS(int SS) {
-        this.SS = SS;
-    }
-
-    public int getZF() {
-        return ZF;
-    }
-
-    public void setZF(int ZF) {
-        this.ZF = ZF;
-    }
-
-    public int getSF() {
-        return SF;
-    }
-
-    public void setSF(int SF) {
-        this.SF = SF;
-    }
-
-    public int getSP() {
-        return SP;
-    }
-
-    public void setSP(int SP) {
-        this.SP = SP;
-    }
-
-    public int getIP() {
-        return IP;
-    }
-
-    public void setIP(int IP) {
-        this.IP = IP;
-    }
-
-    public int getAX() {
-        return AX;
-    }
-
-    public void setAX(int AX) {
-        this.AX = AX;
-    }
-
-    public int getDX() {
-        return DX;
-    }
-
-    public void setDX(int DX) {
-        this.DX = DX;
-    }
-
-    public int getSI() {
-        return SI;
-    }
-
-    public void setSI(int SI) {
-        this.SI = SI;
-    }
-
-    public int getQtde_dados1() {
-        return qtde_dados1;
-    }
-
-    public void setQtde_dados1(int qtde_dados1) {
-        this.qtde_dados1 = qtde_dados1;
-    }
-
-    public int getQtde_dados2() {
-        return qtde_dados2;
-    }
-
-    public void setQtde_dados2(int qtde_dados2) {
-        this.qtde_dados2 = qtde_dados2;
-    }
-
-    public int getQtde_inst1() {
-        return qtde_inst1;
-    }
-
-    public void setQtde_inst1(int qtde_inst1) {
-        this.qtde_inst1 = qtde_inst1;
-    }
-
-    public int getQtde_inst2() {
-        return qtde_inst2;
-    }
-
-    public void setQtde_inst2(int qtde_inst2) {
-        this.qtde_inst2 = qtde_inst2;
-    }
-
     public ArrayList<Integer> getIndex() {
         return index;
     }
@@ -184,29 +54,21 @@ public class Z808 {
     public void loadFirstData() { //pega os primeiros 4 valores do arquivo
         try {
             Scanner sc = new Scanner(new FileReader(entrada)).useDelimiter("\\||\\n");
+            Integer nextPosition = 0;
 
             qtde_dados1 = Integer.parseInt(sc.next());
-            System.out.println("qtde_dados1 " + qtde_dados1);
             qtde_inst1 = Integer.parseInt(sc.next());
-            System.out.println("qtde_inst1 " + qtde_inst1);
             qtde_dados2 = Integer.parseInt(sc.next());
-            System.out.println("qtde_dados2 " + qtde_dados2);
             qtde_inst2 = Integer.parseInt(sc.next());
-            System.out.println("qtde_inst2 " + qtde_inst2);
 
-
-
-            Integer flag = 0;
-            for (int i = 0; i < qtde_dados1; i++ ){
-                Integer valor = Integer.parseInt(sc.next());//0000
-                index.add(flag);
-                Value novo = new Value(valor);//0000
-                System.out.println("valor " + valor);
-
-                memory.put(flag, novo);
-                flag = flag + 2;//anda as posições de 2 em 2
+            for (int i = 0; i < qtde_dados1; i++) {
+                Integer value = Integer.parseInt(sc.next());
+                index.add(nextPosition);
+                Value newValue = new Value(value);
+                memory.put(nextPosition, newValue);
+                nextPosition = nextPosition + 2;
             }
-            loadInstructions(sc, flag, qtde_inst1);
+            loadInstructions(sc, nextPosition, qtde_inst1);
 
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Z808.class.getName()).log(Level.SEVERE, null, ex);
@@ -214,37 +76,30 @@ public class Z808 {
     }
 
     private void loadInstructions(Scanner sc, Integer flag, Integer qtde_inst) { //carrega instruções
-        System.out.println("qtde_inst " + qtde_inst);
+        Integer value;
 
         for (int cont = 0; cont < qtde_inst; cont++ ){
             StringTokenizer st = new StringTokenizer(sc.next());
             String opcode;
-            int cont_tokens = st.countTokens();
-            if (cont_tokens == 1) { //Se é só 1 palavra
+
+            if (st.countTokens() == 1) { //1 token
                 opcode = st.nextToken();
                 index.add(flag);
-                Instruction nova = new Instruction(opcode, 1);
-                memory.put(flag, nova);
-                if (opcode.equalsIgnoreCase("F4") ||
-                        opcode.equalsIgnoreCase("58") ||
-                        opcode.equalsIgnoreCase("50") ||
-                        opcode.equalsIgnoreCase("9D") ||
-                        opcode.equalsIgnoreCase("9C") ||
-                        opcode.equalsIgnoreCase("C3")){
-                    if (opcode.equalsIgnoreCase("F4")){
-                        index_hlt = flag;
-                    }
+                Instruction new_instruction = new Instruction(opcode, 1);
+                memory.put(flag, new_instruction);
+                if (opcode.equals("F4") || opcode.equals("58") || opcode.equals("50") || opcode.equals("9D") || opcode.equals("9C") || opcode.equals("C3")) {
+                    index_hlt = (opcode.equals("F4")) ? flag : index_hlt;
                     flag++;
-                } else {   //eh uma Instruction de dois bytes, mas sem cte ou mem
+                } else {//2 bytes sem memória
                     flag = flag + 2;
                 }
-            } else {   //tem dois tokens, pode ser 2 bytes EB mem, ou 3 bytes 8984 mem
+            } else {//2 tokens
                 opcode = st.nextToken();
-                int valor = Integer.parseInt(st.nextToken());
+                value = Integer.parseInt(st.nextToken());
                 index.add(flag);
-                Instruction nova = new Instruction(opcode, valor,2);
-                memory.put(flag, nova);
-                if (opcode.equalsIgnoreCase("8984") || opcode.equalsIgnoreCase("8B84")){
+                Instruction new_instruction = new Instruction(opcode, value, 2);
+                memory.put(flag, new_instruction);
+                if (opcode.equals("8984") || opcode.equals("8B84")){
                     flag = flag + 3;//3 bytes
                 } else {
                     flag = flag + 2;//2 bytes
@@ -256,33 +111,31 @@ public class Z808 {
             loadValues(sc, flag);
         }
     }
-    private void loadValues(Scanner sc, Integer flag) { //carrega valores
-        System.out.println("\nqtde_dados2 " + qtde_dados2);
 
-        for (int i = 0; i < qtde_dados2; i++ ){
-            Integer valor = Integer.parseInt(sc.next());
-            index.add(flag);
-            Value novo = new Value(valor);
-            memory.put(flag, novo);
-            flag = flag + 2;
+    private void loadValues(Scanner sc, Integer nextPosition) { //carrega valores
+        for (int i = 0; i < qtde_dados2; i++) {
+            Integer value = Integer.parseInt(sc.next());
+            index.add(nextPosition);
+            Value newValue = new Value(value);
+            memory.put(nextPosition, newValue);
+            nextPosition = nextPosition + 2;
         }
-        System.out.println("\nqtde_inst2 " + qtde_inst2);
 
-        loadInstructions(sc, flag, qtde_inst2);
+        loadInstructions(sc, nextPosition, qtde_inst2);
     }
 
-    public int loadStack(int tam_extra) {
-       int prox_index = index.get(index.size()-1) + 1;       //2º segmento TEM q terminar com hlt
+    public Integer loadStack(Integer size) {
+        Integer nextPosition = index.get(index.size() - 1) + 1;
 
-       for (int cont=0; cont < tam_extra; cont++){
-           int valor = 0;
-           index.add(prox_index);
-           Value novo = new Value(valor);
-           memory.put(prox_index, novo);
-           prox_index = prox_index + 2;
+       for (int cont = 0; cont < size; cont++) {
+           Integer value = 0;
+           index.add(nextPosition);
+           Value newValue = new Value(value);
+           memory.put(nextPosition, newValue);
+           nextPosition = nextPosition + 2;
        }
-       //imprimeIndices();
-       return prox_index;
+
+       return nextPosition;//terminar com hlt
     }
 
     public int run(Instruction inst, JTextField label, Integer real_address) {
@@ -385,7 +238,7 @@ public class Z808 {
                     return -1;
                 case "23C2":
                     AX = AX & DX;
-                    ajusta_flags(AX);
+                    updateFlags(AX);
                     label.setText("AND AX,DX");
                     IP = IP +2;
                     return -1;
@@ -406,7 +259,7 @@ public class Z808 {
                     return -1;
                 case "0BC2":
                     AX = AX | DX;
-                    ajusta_flags(AX);
+                    updateFlags(AX);
                     label.setText("OR AX,DX");
                     IP = IP +2;
                     return -1;
@@ -416,7 +269,7 @@ public class Z808 {
                     return -1;
                 case "33C2":
                     AX = AX ^ DX;
-                    ajusta_flags(AX);
+                    updateFlags(AX);
                     label.setText("XOR AX,DX");
                     IP = IP +2;
                     return -1;
@@ -435,7 +288,7 @@ public class Z808 {
                     return -1;
                 case "8ED0":
                     SS = AX;
-                    ajusta_flags(SS);
+                    updateFlags(SS);
                     label.setText("MOV SS,AX");
                     IP = IP +2;
                     return -1;
@@ -488,19 +341,19 @@ public class Z808 {
                     return -1;
                 case "8BD0":
                     DX = AX;
-                    ajusta_flags(DX);
+                    updateFlags(DX);
                     label.setText("MOV DX,AX");
                     IP = IP +2;
                     return -1;
                 case "8BF0":
                     SI = AX;
-                    ajusta_flags(SI);
+                    updateFlags(SI);
                     label.setText("MOV SI,AX");
                     IP = IP +2;
                     return -1;
                 case "8B04":
                     AX = memory.get(SI).getValue();
-                    ajusta_flags(AX);
+                    updateFlags(AX);
                     IP = IP + 2;
                     label.setText("MOV AX,"+"["+SI+"]");
                     return -1;
@@ -616,7 +469,7 @@ public class Z808 {
                     IP = IP +2;
                     int value = memory.get(real_address).getValue();
                     AX = value;
-                    ajusta_flags(AX);
+                    updateFlags(AX);
                     label.setText("MOV AX,"+inst.getValue());
                     return -1;
                 case "A3":
@@ -629,7 +482,7 @@ public class Z808 {
                     int end_real = SI + inst.getValue();
                     IP = IP +3;
                     AX = memory.get(end_real).getValue();
-                    ajusta_flags(AX);
+                    updateFlags(AX);
                     label.setText("MOV AX,"+inst.getValue()+"["+SI+"]");
                     return -1;
                 case "8984":

@@ -4,12 +4,12 @@ public class Key { //interface
     private Integer value;
     private String opcode;
 
-    public Key(String opcode, int value) {
+    public Key(String opcode, Integer value) {
         this.value = value;
         this.opcode = opcode;
     }
     
-    public Key (int value){
+    public Key (Integer value){
         this.value = value;
         this.opcode = null;
     }
@@ -30,7 +30,7 @@ public class Key { //interface
         return value;
     }
 
-    public void setValue(Integer valor) {
+    public void setValue(Integer value) {
         this.value = value;
     }
     
