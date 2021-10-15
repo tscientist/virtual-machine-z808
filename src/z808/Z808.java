@@ -139,9 +139,7 @@ public class Z808 extends Flags {
     }
 
     public int run(Instruction inst, JTextField label, Integer real_address) {
-        // qqer n > 0 = atualiza tab mem , -1 = n precisa atualizar
-        int type = inst.getType();
-        //tipo 1 = sem campo valor, tipo 2 = com campo valor
+        Integer type = inst.getType();//tipo 1 = sem campo valor, tipo 2 = com campo valor
 
         String opcode = inst.getOpcode();
 
@@ -150,25 +148,25 @@ public class Z808 extends Flags {
                 case "03C0":
                     AX = DX + AX;
                     label.setText("ADD AX,DX");
-                    ajusta_flags(AX);
-                    IP = IP +2;
+                    updateFlags(AX);
+                    IP = IP + 2;
                     return -1;
                 case "03C2":
                     AX = AX + AX;
                     label.setText("ADD AX,AX");
-                    ajusta_flags(AX);
+                    updateFlags(AX);
                     IP = IP +2;
                     return -1;
                 case "F7F6":
                     String bin_lower = Integer.toBinaryString(AX);
-                    bin_lower = ajusta_bin_string(bin_lower);
+                    bin_lower = updateBinString(bin_lower);
                     String bin_higher = Integer.toBinaryString(DX);
                     bin_higher = bin_higher.concat(bin_lower);
                     int dividendo = Integer.parseInt(bin_higher, 2);
                     String bin_divisor;
                     bin_divisor = Integer.toBinaryString(SI);
                     label.setText("DIV SI");
-                    bin_divisor = ajusta_bin_string(bin_divisor);
+                    bin_divisor = updateBinString(bin_divisor);
                     int divisor = Integer.parseInt(bin_divisor, 2);
                     AX = dividendo/divisor;
                     DX = dividendo % divisor;
@@ -176,14 +174,14 @@ public class Z808 extends Flags {
                     return -1;
                 case "F7F0":
                     String bin_lower2 = Integer.toBinaryString(AX);
-                    bin_lower2 = ajusta_bin_string(bin_lower2);
+                    bin_lower2 = updateBinString(bin_lower2);
                     String bin_higher2 = Integer.toBinaryString(DX);
                     bin_higher2 = bin_higher2.concat(bin_lower2);
                     int dividendo2 = Integer.parseInt(bin_higher2, 2);
                     String bin_divisor2;
                     bin_divisor2 = Integer.toBinaryString(AX); //div AX
                     label.setText("DIV AX");
-                    bin_divisor2 = ajusta_bin_string(bin_divisor2);
+                    bin_divisor2 = updateBinString(bin_divisor2);
                     int divisor2 = Integer.parseInt(bin_divisor2, 2);
                     AX = dividendo2/divisor2;
                     DX = dividendo2 % divisor2;
@@ -192,19 +190,19 @@ public class Z808 extends Flags {
                 case "2BC2":
                     AX = AX - DX;
                     label.setText("SUB AX,DX");
-                    ajusta_flags(AX);
+                    updateFlags(AX);
                     IP = IP + 2;
                     return -1;
                 case "2BC0":
                     System.out.println("Problema!");
                     AX = AX - AX;
                     label.setText("SUB AX,AX");
-                    ajusta_flags(AX);
+                    updateFlags(AX);
                     IP = IP + 2;
                     return -1;
                 case "F7E6":
                     String multiplicando = Integer.toBinaryString(AX);
-                    multiplicando = ajusta_32bits(multiplicando);
+                    multiplicando = update32bitString(multiplicando);
                     multiplicando = multiplicando.substring(16, 32);
                     String multiplicador;
                     multiplicador = Integer.toBinaryString(SI);
@@ -213,15 +211,15 @@ public class Z808 extends Flags {
                     int fat2 = Integer.parseInt(multiplicador, 2);
                     int res = fat1*fat2;
                     String res_inteira = Integer.toBinaryString(res);
-                    res_inteira = ajusta_32bits(res_inteira);
+                    res_inteira = update32bitString(res_inteira);
                     DX = Integer.parseInt(res_inteira.substring(0, 16), 2);
                     AX = Integer.parseInt(res_inteira.substring(16, 32), 2);
-                    ajusta_flags(AX);
+                    updateFlags(AX);
                     IP = IP + 2;
                     return -1;
                 case "F7E0":
                     String multiplicando2 = Integer.toBinaryString(AX);
-                    multiplicando2 = ajusta_32bits(multiplicando2);
+                    multiplicando2 = update32bitString(multiplicando2);
                     multiplicando2 = multiplicando2.substring(16, 32);
                     String multiplicador2;
                     multiplicador2 = Integer.toBinaryString(SI);
@@ -230,10 +228,10 @@ public class Z808 extends Flags {
                     int fat4 = Integer.parseInt(multiplicador2, 2);
                     int res2 = fat3*fat4;
                     String res_inteira2 = Integer.toBinaryString(res2);
-                    res_inteira = ajusta_32bits(res_inteira2);
+                    res_inteira = update32bitString(res_inteira2);
                     DX = Integer.parseInt(res_inteira.substring(0, 16), 2);
                     AX = Integer.parseInt(res_inteira.substring(16, 32), 2);
-                    ajusta_flags(AX);
+                    updateFlags(AX);
                     IP = IP + 2;
                     return -1;
                 case "23C2":
@@ -249,12 +247,12 @@ public class Z808 extends Flags {
                     return -1;
                 case "F7D0":
                     String valor = Integer.toBinaryString(AX);
-                    valor = ajusta_32bits(valor);
-                    valor = inverte_bin_string(valor.substring(16, 32));
+                    valor = update32bitString(valor);
+                    valor = reverseBinString(valor.substring(16, 32));
                     short s = (short)Integer.parseInt(valor, 2);
                     AX = (int)s;
                     IP = IP +2;
-                    ajusta_flags(AX);
+                    updateFlags(AX);
                     label.setText("NOT AX");
                     return -1;
                 case "0BC2":
@@ -294,20 +292,20 @@ public class Z808 extends Flags {
                     return -1;
                 case "8ED8":
                     DS = AX;
-                    ajusta_flags(DS);
+                    updateFlags(DS);
                     label.setText("MOV DS,AX");
                     IP = IP +2;
                     return -1;
                 case "8CD0":
                     AX = SS;
                     label.setText("MOV AX,SS");
-                    ajusta_flags(AX);
+                    updateFlags(AX);
                     IP = IP +2;
                     return -1;
                 case "8CD8":
                     AX = DS;
                     label.setText("MOV AX,DS");
-                    ajusta_flags(AX);
+                    updateFlags(AX);
                     IP = IP +2;
                     return -1;
                 case "8CC8":
@@ -318,24 +316,24 @@ public class Z808 extends Flags {
                 case "8BC2":
                     AX = DX;
                     label.setText("MOV AX,DX");
-                    ajusta_flags(AX);
+                    updateFlags(AX);
                     IP = IP +2;
                     return -1;
                 case "8BC4":
                     AX = SP;
                     label.setText("MOV AX,SP");
-                    ajusta_flags(AX);
+                    updateFlags(AX);
                     IP = IP +2;
                     return -1;
                 case "8BC6":
                     AX = SI;
                     label.setText("MOV AX,SI");
-                    ajusta_flags(AX);
+                    updateFlags(AX);
                     IP = IP +2;
                     return -1;
                 case "8BE0":
                     SP = AX;
-                    ajusta_flags(SP);
+                    updateFlags(SP);
                     IP = IP +2;
                     label.setText("MOV SP,AX");
                     return -1;
@@ -398,31 +396,31 @@ public class Z808 extends Flags {
             switch (opcode) {
                 case "05":
                     AX = AX + inst.getValue();
-                    ajusta_flags(AX);
+                    updateFlags(AX);
                     label.setText("ADD AX,#"+inst.getValue());
                     IP = IP +2;
                     return -1;
                 case "2D":
                     AX = AX - inst.getValue();
-                    ajusta_flags(AX);
+                    updateFlags(AX);
                     label.setText("SUB AX,#"+inst.getValue());
                     IP = IP +2;
                     return -1;
                 case "25":
                     AX = AX & inst.getValue();
-                    ajusta_flags(AX);
+                    updateFlags(AX);
                     label.setText("AND AX,#"+inst.getValue());
                     IP = IP +2;
                     return -1;
                 case "0D":
                     AX = AX | inst.getValue();
-                    ajusta_flags(AX);
+                    updateFlags(AX);
                     label.setText("OR AX,#"+inst.getValue());
                     IP = IP +2;
                     return -1;
                 case "35":
                     AX = AX ^ inst.getValue();
-                    ajusta_flags(AX);
+                    updateFlags(AX);
                     label.setText("XOR AX,#"+inst.getValue());
                     IP = IP +2;
                     return -1;
@@ -494,7 +492,7 @@ public class Z808 extends Flags {
                     return end_real2;
                 case "B8":
                     AX = inst.getValue();
-                    ajusta_flags(AX);
+                    updateFlags(AX);
                     IP = IP +2;
                     label.setText("MOV AX,#"+inst.getValue());
                     return -1;
@@ -502,87 +500,7 @@ public class Z808 extends Flags {
                 default:
                     IP = IP;
                     return -1;
-            }}}
-
-    private String ajusta_bin_string(String bin_string) {
-        StringBuilder sb = new StringBuilder();
-        int dif = 16 - bin_string.length();
-        int cont = 0;
-        if( dif > 0){
-            while(cont < dif){
-                sb.append('0');
-                cont++;
             }
-            return sb.toString().concat(bin_string);
-        } else if( dif < 0){
-            return bin_string.substring(bin_string.length()-16, bin_string.length());
-        } else{
-            return bin_string;
-        }
-    }
-
-    private void ajusta_flags(int destino) {
-        if((destino > Short.MAX_VALUE) || (destino < Short.MIN_VALUE)){
-            SR = SR | 4;
-        }
-        
-        if( destino == 0){
-            ZF = 1;
-            SF = 0;
-            //System.out.print("deu zero");
-            SR = SR | 2;
-            SR = SR & 6;
-            //System.out.printf("sr: %d", SR);
-        }
-        else{
-            ZF = 0;
-            // SR = SR & 5;
-            if( destino >= 0){
-                SF = 0;
-                SR = SR & 4;
-            }
-            else{
-                SF = 1;
-                SR = SR | 1;
-                SR = SR & 5;
-            }
-        }
-        
-        
-    }
-
-    private String ajusta_32bits(String res_inteira) {
-        StringBuilder sb = new StringBuilder();
-        int dif = 32 - res_inteira.length();
-        int cont = 0;
-        if( dif > 0){
-            while(cont < dif){
-                sb.append('0');
-                cont++;
-            }
-            return sb.toString().concat(res_inteira);
-        }
-        else{
-            return res_inteira;
-        }
-    }
-
-    private String inverte_bin_string(String str) {
-        StringBuilder sb = new StringBuilder();
-        for(int i = 0; i < str.length(); i++){
-            if(str.charAt(i) == '0'){
-                sb.append('1');
-            }
-            else{
-                sb.append('0');
-            }
-        }
-        return sb.toString();
-    }
-
-    private void imprimeIndex() {
-        for(int i = 0; i < index.size(); i++){
-            System.out.print("\n"+i+":"+index.get(i));
         }
     }
 }
