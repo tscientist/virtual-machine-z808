@@ -146,264 +146,239 @@ public class Z808 extends Flags {
         String opcode = inst.getOpcode();
 
         if (type == 1) {  // INSTRUÇÕES SEM O CAMPO VALOR
-            System.out.println("if tipo 1");
-            /* INSTRUÇÕES ARITMÉTICAS */
-            if (opcode.matches("03C[02]")){   // add ax,dx OU add ax,ax
-                System.out.println("tipo 1 primeiro if"+ opcode);
-
-                if (opcode.charAt(3) == '2' ){
-                   AX = DX + AX;
-                   label.setText("ADD AX,DX");
-               } else {
-                   AX = AX + AX;
-                   label.setText("ADD AX,AX");
-               }
-                updateFlags(AX);
-               IP = IP +2;
-               return -1;
-            } else if(opcode.matches("F7F[60]")){//div ax OU div SI
-                System.out.println("tipo 1 segundo if"+ opcode);
-
-                String bin_lower = Integer.toBinaryString(AX);
-                bin_lower = updateBinString(bin_lower);
-                String bin_higher = Integer.toBinaryString(DX);
-                
-                bin_higher = bin_higher.concat(bin_lower);
-                int dividendo = Integer.parseInt(bin_higher, 2);
-                String bin_divisor;
-                if (opcode.charAt(3) == '6') {  //div SI
+            switch (opcode) {
+                case "03C0":
+                    AX = DX + AX;
+                    label.setText("ADD AX,DX");
+                    ajusta_flags(AX);
+                    IP = IP +2;
+                    return -1;
+                case "03C2":
+                    AX = AX + AX;
+                    label.setText("ADD AX,AX");
+                    ajusta_flags(AX);
+                    IP = IP +2;
+                    return -1;
+                case "F7F6":
+                    String bin_lower = Integer.toBinaryString(AX);
+                    bin_lower = ajusta_bin_string(bin_lower);
+                    String bin_higher = Integer.toBinaryString(DX);
+                    bin_higher = bin_higher.concat(bin_lower);
+                    int dividendo = Integer.parseInt(bin_higher, 2);
+                    String bin_divisor;
                     bin_divisor = Integer.toBinaryString(SI);
                     label.setText("DIV SI");
-                } else {
-                    bin_divisor = Integer.toBinaryString(AX); //div AX
+                    bin_divisor = ajusta_bin_string(bin_divisor);
+                    int divisor = Integer.parseInt(bin_divisor, 2);
+                    AX = dividendo/divisor;
+                    DX = dividendo % divisor;
+                    IP = IP +2;
+                    return -1;
+                case "F7F0":
+                    String bin_lower2 = Integer.toBinaryString(AX);
+                    bin_lower2 = ajusta_bin_string(bin_lower2);
+                    String bin_higher2 = Integer.toBinaryString(DX);
+                    bin_higher2 = bin_higher2.concat(bin_lower2);
+                    int dividendo2 = Integer.parseInt(bin_higher2, 2);
+                    String bin_divisor2;
+                    bin_divisor2 = Integer.toBinaryString(AX); //div AX
                     label.setText("DIV AX");
-                }
-                bin_divisor = updateBinString(bin_divisor);
-                int divisor = Integer.parseInt(bin_divisor, 2);
-                AX = dividendo/divisor;
-                DX = dividendo % divisor;
-                IP = IP +2;
-                return -1;
-            } else if (opcode.matches("2BC[20]")) {        //sub ax,dx OU sub ax,ax
-                System.out.println("tipo 1 terceiro if"+ opcode);
-
-                if (opcode.charAt(3) == '2'){    //sub ax,dx
+                    bin_divisor2 = ajusta_bin_string(bin_divisor2);
+                    int divisor2 = Integer.parseInt(bin_divisor2, 2);
+                    AX = dividendo2/divisor2;
+                    DX = dividendo2 % divisor2;
+                    IP = IP +2;
+                    return -1;
+                case "2BC2":
                     AX = AX - DX;
                     label.setText("SUB AX,DX");
-                } else {   // sub ax, ax
-                    System.out.println("deu ruim");
+                    ajusta_flags(AX);
+                    IP = IP + 2;
+                    return -1;
+                case "2BC0":
+                    System.out.println("Problema!");
                     AX = AX - AX;
                     label.setText("SUB AX,AX");
-                }
-                updateFlags(AX);
-                IP = IP + 2;
-                return -1;
-            } else if (opcode.matches("F7E[60]")) {   //mul si ou mul ax;
-                System.out.println("tipo 1 quarto if"+ opcode);
-
-                String multiplicando = Integer.toBinaryString(AX);
-                multiplicando = update32bitString(multiplicando);
-                multiplicando = multiplicando.substring(16, 32);
-                String multiplicador;
-                if (opcode.charAt(3) == '6'){
+                    ajusta_flags(AX);
+                    IP = IP + 2;
+                    return -1;
+                case "F7E6":
+                    String multiplicando = Integer.toBinaryString(AX);
+                    multiplicando = ajusta_32bits(multiplicando);
+                    multiplicando = multiplicando.substring(16, 32);
+                    String multiplicador;
                     multiplicador = Integer.toBinaryString(SI);
                     label.setText("MUL SI");
-                } else {
-                    multiplicador = Integer.toBinaryString(AX); 
-                    label.setText("MUL AX");
-                }
-                int fat1 = Integer.parseInt(multiplicando, 2);
-                int fat2 = Integer.parseInt(multiplicador, 2);
-                int res = fat1*fat2;
-                String res_inteira = Integer.toBinaryString(res);
-                res_inteira = update32bitString(res_inteira);
-                DX = Integer.parseInt(res_inteira.substring(0, 16), 2);
-                AX = Integer.parseInt(res_inteira.substring(16, 32), 2);
-                updateFlags(AX);
-                IP = IP + 2;
-                return -1;
-            }
-            
-            /* INSTRUÇÕES LÓGICAS*/
-            else if (opcode.matches("23C[20]")) {   //and ax,dx OU and ax,ax
-                System.out.println("tipo 1 quinto if"+ opcode);
-
-                if(opcode.charAt(3) == '2'){  // and ax,dx
+                    int fat1 = Integer.parseInt(multiplicando, 2);
+                    int fat2 = Integer.parseInt(multiplicador, 2);
+                    int res = fat1*fat2;
+                    String res_inteira = Integer.toBinaryString(res);
+                    res_inteira = ajusta_32bits(res_inteira);
+                    DX = Integer.parseInt(res_inteira.substring(0, 16), 2);
+                    AX = Integer.parseInt(res_inteira.substring(16, 32), 2);
+                    ajusta_flags(AX);
+                    IP = IP + 2;
+                    return -1;
+                case "F7E0":
+                    String multiplicando2 = Integer.toBinaryString(AX);
+                    multiplicando2 = ajusta_32bits(multiplicando2);
+                    multiplicando2 = multiplicando2.substring(16, 32);
+                    String multiplicador2;
+                    multiplicador2 = Integer.toBinaryString(SI);
+                    label.setText("MUL SI");
+                    int fat3 = Integer.parseInt(multiplicando2, 2);
+                    int fat4 = Integer.parseInt(multiplicador2, 2);
+                    int res2 = fat3*fat4;
+                    String res_inteira2 = Integer.toBinaryString(res2);
+                    res_inteira = ajusta_32bits(res_inteira2);
+                    DX = Integer.parseInt(res_inteira.substring(0, 16), 2);
+                    AX = Integer.parseInt(res_inteira.substring(16, 32), 2);
+                    ajusta_flags(AX);
+                    IP = IP + 2;
+                    return -1;
+                case "23C2":
                     AX = AX & DX;
                     updateFlags(AX);
                     label.setText("AND AX,DX");
-                }
-                else{ //and ax, ax
+                    IP = IP +2;
+                    return -1;
+                case "23C0":
                     label.setText("AND AX,AX");
                     AX = AX & AX; //não testei se funciona ainda
-                }
-                IP = IP +2;
-                return -1;
-            }
-            else if(opcode.equalsIgnoreCase("F7D0")){     //not ax
-                System.out.println("tipo 1 sexto if"+ opcode);
-
-                String valor = Integer.toBinaryString(AX);
-                valor = update32bitString(valor);
-                valor = reverseBinString(valor.substring(16, 32));
-                short s = (short)Integer.parseInt(valor, 2);
-                AX = (int)s;
-                IP = IP +2;
-                updateFlags(AX);
-                label.setText("NOT AX");
-                return -1;
-            }
-            else if(opcode.matches("0BC[20]")){  // or ax,dx OU or ax,ax
-                System.out.println("tipo 1 sete if"+ opcode);
-
-                if(opcode.charAt(3) == '2'){  // or ax,dx
+                    IP = IP +2;
+                    return -1;
+                case "F7D0":
+                    String valor = Integer.toBinaryString(AX);
+                    valor = ajusta_32bits(valor);
+                    valor = inverte_bin_string(valor.substring(16, 32));
+                    short s = (short)Integer.parseInt(valor, 2);
+                    AX = (int)s;
+                    IP = IP +2;
+                    ajusta_flags(AX);
+                    label.setText("NOT AX");
+                    return -1;
+                case "0BC2":
                     AX = AX | DX;
                     updateFlags(AX);
                     label.setText("OR AX,DX");
-                }
-                else{ // não faz nada pq é o msm valor
+                    IP = IP +2;
+                    return -1;
+                case "0BC0":
                     label.setText("OR AX,AX");
-                }
-                IP = IP +2;
-                return -1;
-            }
-            else if(opcode.matches("33C[20]")){  // xor ax,dx OU xor ax,ax
-                System.out.println("tipo 1 oitovo if"+ opcode);
-
-                if(opcode.charAt(3) == '2'){  // xor ax,dx
+                    IP = IP +2;
+                    return -1;
+                case "33C2":
                     AX = AX ^ DX;
                     updateFlags(AX);
                     label.setText("XOR AX,DX");
-                }
-                else{
+                    IP = IP +2;
+                    return -1;
+                case "33C0":
                     AX = 0;            // n xor n = 0 sempre
                     ZF = 1;
                     label.setText("XOR AX,AX");
-                }
-                IP = IP +2;
-                return -1;
-            }
-            /* INSRUÇÕES DE DESVIO*/
-            else if(opcode.equalsIgnoreCase("C3")){        // ret
-                System.out.println("tipo 1 nono if"+ opcode);
-
-                int end = SP;
-                Key algo = memory.get(end);
-                IP = algo.getValue();
-                SP = SP + 2;                    //nao sei se ret altera o valor do stack pointer..
-                label.setText("RET");
-                return -1;
-            }
-            /* INSTRUÇÕES DE MOVIMENTAÇÃO*/
-            else if(opcode.matches("8ED[08]")){   // mov ss,ax OU mov ds,ax
-                System.out.println("tipo 1 decimo if"+ opcode);
-
-                if(opcode.charAt(3) == '0'){ // mov ss,ax
+                    IP = IP +2;
+                    return -1;
+                case "C3":
+                    int end = SP;
+                    Key algo1 = memory.get(end);
+                    IP = algo1.getValue();
+                    SP = SP + 2;                    //nao sei se ret altera o valor do stack pointer..
+                    label.setText("RET");
+                    return -1;
+                case "8ED0":
                     SS = AX;
                     updateFlags(SS);
                     label.setText("MOV SS,AX");
-                }
-                else{
-                   DS = AX;
-                    updateFlags(DS);
-                   label.setText("MOV DS,AX");
-                }
-                IP = IP +2;
-                return -1;
-            }
-            else if (opcode.matches("8CD[08]")){  // mov ax,ss OU mov ax,ds
-                System.out.println("tipo 1 decimo primeiro if"+ opcode);
-
-                if(opcode.charAt(3) == '0'){ // mov ax,ss
+                    IP = IP +2;
+                    return -1;
+                case "8ED8":
+                    DS = AX;
+                    ajusta_flags(DS);
+                    label.setText("MOV DS,AX");
+                    IP = IP +2;
+                    return -1;
+                case "8CD0":
                     AX = SS;
                     label.setText("MOV AX,SS");
-                }
-                else{
-                   AX = DS;
-                   label.setText("MOV AX,DS");
-                }
-                updateFlags(AX);
-                IP = IP +2;
-                return -1;
-            } else if(opcode.equalsIgnoreCase("8CC8")){    // mov ax,cs
-                System.out.println("tipo 1 12 if"+ opcode);
-
-                AX = CS; 
-                label.setText("MOV AX,CS");
-                IP = IP +2;
-                return -1;
-            } else if(opcode.matches("8BC[246]")){   // mov ax,dx OU mov ax,sp OU mov ax,si
-                System.out.println("tipo 1 13 if"+ opcode);
-
-                switch(opcode.charAt(3)){
-                    case '2': AX = DX; label.setText("MOV AX,DX");  break;
-                    case '4': AX = SP; label.setText("MOV AX,SP"); break;
-                    case '6': AX = SI; label.setText("MOV AX,SI"); break;
-                    
-                }
-                updateFlags(AX);
-                IP = IP +2;
-                return -1;
-            } else if(opcode.equalsIgnoreCase("8BE0")){  // mov sp,ax
-                System.out.println("tipo 1 - 14 if"+ opcode);
-
-                SP = AX;
-                updateFlags(SP);
-                IP = IP +2;
-                label.setText("MOV SP,AX");
-                return -1;
-            } else if (opcode.matches("8B[DF]0")){  // mov dx,ax OU mov si,ax
-                System.out.println("tipo 1 - 15 if"+ opcode);
-
-                if (opcode.charAt(2) == 'D'){
+                    ajusta_flags(AX);
+                    IP = IP +2;
+                    return -1;
+                case "8CD8":
+                    AX = DS;
+                    label.setText("MOV AX,DS");
+                    ajusta_flags(AX);
+                    IP = IP +2;
+                    return -1;
+                case "8CC8":
+                    AX = CS;
+                    label.setText("MOV AX,CS");
+                    IP = IP +2;
+                    return -1;
+                case "8BC2":
+                    AX = DX;
+                    label.setText("MOV AX,DX");
+                    ajusta_flags(AX);
+                    IP = IP +2;
+                    return -1;
+                case "8BC4":
+                    AX = SP;
+                    label.setText("MOV AX,SP");
+                    ajusta_flags(AX);
+                    IP = IP +2;
+                    return -1;
+                case "8BC6":
+                    AX = SI;
+                    label.setText("MOV AX,SI");
+                    ajusta_flags(AX);
+                    IP = IP +2;
+                    return -1;
+                case "8BE0":
+                    SP = AX;
+                    ajusta_flags(SP);
+                    IP = IP +2;
+                    label.setText("MOV SP,AX");
+                    return -1;
+                case "8BD0":
                     DX = AX;
                     updateFlags(DX);
                     label.setText("MOV DX,AX");
-                } else {
+                    IP = IP +2;
+                    return -1;
+                case "8BF0":
                     SI = AX;
                     updateFlags(SI);
                     label.setText("MOV SI,AX");
-                }
-                IP = IP +2;
-                return -1;
-            } else if(opcode.matches("8[B9]04")){  // mov ax,[si]  OU mov [SI],ax
-                System.out.println("tipo 1 - 16 if"+ opcode);
-
-                if(opcode.charAt(1) == 'B'){
+                    IP = IP +2;
+                    return -1;
+                case "8B04":
                     AX = memory.get(SI).getValue();
                     updateFlags(AX);
                     IP = IP + 2;
                     label.setText("MOV AX,"+"["+SI+"]");
                     return -1;
-                }
-                else{                 //vai alterar algo na memory mov [si],ax
-                    Key algo = memory.get(SI);
-                    algo.setValue(AX);
+                case "8904":
+                    Key algo2 = memory.get(SI);
+                    algo2.setValue(AX);
                     IP = IP +2;
                     label.setText("MOV ["+SI+"],AX");
                     return SI;
-                }
-            } else if(opcode.matches("5[80]")){/* INSTRUÇÕES DE PILHA */     // pop ax OU push ax
-                System.out.println("tipo 1 - 17 if"+ opcode);
-
-                if (opcode.charAt(1) == '8') {  // pop ax
+                case "58":
                     try{
                         AX = memory.get(SP).getValue();
                         SP = SP +2;
                         label.setText("POP AX");
                     }
                     catch(NullPointerException e){
-                        JOptionPane.showMessageDialog(null, "Pilha vazia", "Erro", JOptionPane.ERROR_MESSAGE); 
+                        JOptionPane.showMessageDialog(null, "Pilha vazia", "Erro", JOptionPane.ERROR_MESSAGE);
                     }
                     IP = IP +1;
                     return -1;
-                } else { //push ax
-                    /*AX = 5;*/
+                case "50":
                     SP = SP -2;
-                    
                     if ( SP > index_hlt) {                        //só pode empilhar se a pilha nao estiver invadindo area de dados, delimitada pelo indice do hlt
-                        Key algo = memory.get(SP);
-                        algo.setValue(AX);
+                        Key algo3 = memory.get(SP);
+                        algo3.setValue(AX);
                         label.setText("PUSH AX");
                         IP = IP +1;       // IP +1 pq é uma Instruction de um byte só
                         return SP;
@@ -413,46 +388,45 @@ public class Z808 extends Flags {
                         IP = IP +1;
                         return -1;
                     }
-                }
-            } else { //tipo 1 Instruction vazia
-                label.setText("HLT");
-                IP = IP +2;
-                return -1;
+
+                default:
+                    label.setText("HLT");
+                    IP = IP +2;
+                    return -1;
             }
         } else {  //INSTRUÇÕES DE TIPO 2 - TEM CAMPO VALOR CTE OU MEM
-            /* INSTRUÇÕES ARITMÉTICAS */
-            if (opcode.equalsIgnoreCase("05")) {  // add ax,cte
-                AX = AX + inst.getValue();
-                updateFlags(AX);
-                label.setText("ADD AX,#"+inst.getValue());
-                IP = IP +2;
-                return -1;
-            } else if (opcode.equalsIgnoreCase("2D")) {   // sub ax,cte
-                AX = AX - inst.getValue();
-                updateFlags(AX);
-                label.setText("SUB AX,#"+inst.getValue());
-                IP = IP +2;
-                return -1;
-            } else if (opcode.equalsIgnoreCase("25")) {  /* INSTRUÇÕES LÓGICAS */ // and ax,cte
-                AX = AX & inst.getValue();
-                updateFlags(AX);
-                label.setText("AND AX,#"+inst.getValue());
-                IP = IP +2;
-                return -1;
-            } else if (opcode.equalsIgnoreCase("0D")) {   // or ax,cte
-                AX = AX | inst.getValue();
-                updateFlags(AX);
-                label.setText("OR AX,#"+inst.getValue());
-                IP = IP +2;
-                return -1;
-            } else if(opcode.equalsIgnoreCase("35")){  // xor ax,cte
-                AX = AX ^ inst.getValue();
-                updateFlags(AX);
-                label.setText("XOR AX,#"+inst.getValue());
-                IP = IP +2;
-                return -1;
-            } else if( opcode.matches("7[45A]")){  // jz end, jnz end ou jp end
-                if(opcode.charAt(1) == '4'){  // jz end
+            switch (opcode) {
+                case "05":
+                    AX = AX + inst.getValue();
+                    ajusta_flags(AX);
+                    label.setText("ADD AX,#"+inst.getValue());
+                    IP = IP +2;
+                    return -1;
+                case "2D":
+                    AX = AX - inst.getValue();
+                    ajusta_flags(AX);
+                    label.setText("SUB AX,#"+inst.getValue());
+                    IP = IP +2;
+                    return -1;
+                case "25":
+                    AX = AX & inst.getValue();
+                    ajusta_flags(AX);
+                    label.setText("AND AX,#"+inst.getValue());
+                    IP = IP +2;
+                    return -1;
+                case "0D":
+                    AX = AX | inst.getValue();
+                    ajusta_flags(AX);
+                    label.setText("OR AX,#"+inst.getValue());
+                    IP = IP +2;
+                    return -1;
+                case "35":
+                    AX = AX ^ inst.getValue();
+                    ajusta_flags(AX);
+                    label.setText("XOR AX,#"+inst.getValue());
+                    IP = IP +2;
+                    return -1;
+                case "74":
                     switch(SR){
                         case 2: IP = inst.getValue(); break;
                         case 6: IP = inst.getValue(); break;
@@ -460,8 +434,7 @@ public class Z808 extends Flags {
                     }
                     label.setText("JZ "+inst.getValue());
                     return -1;
-                }
-                else if(opcode.charAt(1) == '5'){  // jnz end
+                case "75":
                     switch(SR){
                         case 0: IP = inst.getValue(); break;
                         case 1: IP = inst.getValue(); break;
@@ -471,8 +444,7 @@ public class Z808 extends Flags {
                     }
                     label.setText("JNZ "+inst.getValue());
                     return -1;
-                }
-                else{  // jp end
+                case "76":
                     switch(SR){
                         case 0: IP = inst.getValue(); break;
                         case 2: IP = inst.getValue(); break;
@@ -482,61 +454,135 @@ public class Z808 extends Flags {
                     }
                     label.setText("JP "+inst.getValue());
                     return -1;
-                }
-            } else if (opcode.matches("E[B8]")) {   // jmp end ou call end
-                if (opcode.charAt(1) == 'B'){  // jmp end
+                case "EB":
                     IP = inst.getValue();
                     label.setText("JMP " + inst.getValue());
                     return -1;
-                } else {   // call end
+                case "E8":
                     SP = SP - 2;
                     Key algo = memory.get(SP);
                     algo.setValue(IP + 2);
                     IP = inst.getValue();
                     label.setText("CALL "+inst.getValue());
                     return SP;
-                }
-            } else if(opcode.matches("A[13]")) {/* INSTRUÇÕES DE MOVIMENTAÇÃO */   // mov ax,mem ou mov mem,ax
-                IP = IP +2;
-                if (opcode.charAt(1) == '1'){  // mov ax,mem
-                    //imprimememory();
+                case "A1":
+                    IP = IP +2;
                     int value = memory.get(real_address).getValue();
                     AX = value;
                     updateFlags(AX);
                     label.setText("MOV AX,"+inst.getValue());
                     return -1;
-                } else {  // mov mem, ax
+                case "A3":
+                    IP = IP +2;
                     Key key = memory.get(inst.getValue());
                     key.setValue(AX);
                     label.setText("MOV "+inst.getValue()+",AX");
                     return inst.getValue();
-                }
-            } else if(opcode.matches("8[B9]84")){   // mov ax,mem[si]  ou mov mem[si],ax
-                int end_real = SI + inst.getValue();
-                IP = IP +3;
-                if(opcode.charAt(1) == 'B'){  // mov ax,mem[si]
+                case "8B84":
+                    int end_real = SI + inst.getValue();
+                    IP = IP +3;
                     AX = memory.get(end_real).getValue();
                     updateFlags(AX);
                     label.setText("MOV AX,"+inst.getValue()+"["+SI+"]");
                     return -1;
-                }
-                else{  // mov mem[si],ax
-                    Key algo = memory.get(end_real);
-                    algo.setValue(AX);
+                case "8984":
+                    int end_real2 = SI + inst.getValue();
+                    IP = IP +3;
+                    Key algo2 = memory.get(end_real2);
+                    algo2.setValue(AX);
                     label.setText("MOV "+inst.getValue()+"["+SI+"], AX");
-                    return end_real;
-                }
+                    return end_real2;
+                case "B8":
+                    AX = inst.getValue();
+                    ajusta_flags(AX);
+                    IP = IP +2;
+                    label.setText("MOV AX,#"+inst.getValue());
+                    return -1;
+
+                default:
+                    IP = IP;
+                    return -1;
+            }}}
+
+    private String ajusta_bin_string(String bin_string) {
+        StringBuilder sb = new StringBuilder();
+        int dif = 16 - bin_string.length();
+        int cont = 0;
+        if( dif > 0){
+            while(cont < dif){
+                sb.append('0');
+                cont++;
             }
-            else if(opcode.equalsIgnoreCase("B8")){   // mov ax,cte
-                AX = inst.getValue();
-                updateFlags(AX);
-                IP = IP +2;
-                label.setText("MOV AX,#"+inst.getValue());
-                return -1;
-            } else {
-                IP = IP;
-                return -1;
+            return sb.toString().concat(bin_string);
+        } else if( dif < 0){
+            return bin_string.substring(bin_string.length()-16, bin_string.length());
+        } else{
+            return bin_string;
+        }
+    }
+
+    private void ajusta_flags(int destino) {
+        if((destino > Short.MAX_VALUE) || (destino < Short.MIN_VALUE)){
+            SR = SR | 4;
+        }
+        
+        if( destino == 0){
+            ZF = 1;
+            SF = 0;
+            //System.out.print("deu zero");
+            SR = SR | 2;
+            SR = SR & 6;
+            //System.out.printf("sr: %d", SR);
+        }
+        else{
+            ZF = 0;
+            // SR = SR & 5;
+            if( destino >= 0){
+                SF = 0;
+                SR = SR & 4;
+            }
+            else{
+                SF = 1;
+                SR = SR | 1;
+                SR = SR & 5;
             }
         }
-     }
+        
+        
+    }
+
+    private String ajusta_32bits(String res_inteira) {
+        StringBuilder sb = new StringBuilder();
+        int dif = 32 - res_inteira.length();
+        int cont = 0;
+        if( dif > 0){
+            while(cont < dif){
+                sb.append('0');
+                cont++;
+            }
+            return sb.toString().concat(res_inteira);
+        }
+        else{
+            return res_inteira;
+        }
+    }
+
+    private String inverte_bin_string(String str) {
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0; i < str.length(); i++){
+            if(str.charAt(i) == '0'){
+                sb.append('1');
+            }
+            else{
+                sb.append('0');
+            }
+        }
+        return sb.toString();
+    }
+
+    private void imprimeIndex() {
+        for(int i = 0; i < index.size(); i++){
+            System.out.print("\n"+i+":"+index.get(i));
+        }
+    }
 }
