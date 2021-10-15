@@ -176,4 +176,50 @@ public class Flags {
             }
         }
     }
+
+    public String updateBinString(String bin_string) {
+        StringBuilder sb = new StringBuilder();
+        int dif = 16 - bin_string.length();
+        int cont = 0;
+        if( dif > 0){
+            while(cont < dif){
+                sb.append('0');
+                cont++;
+            }
+            return sb.toString().concat(bin_string);
+        } else if( dif < 0){
+            return bin_string.substring(bin_string.length()-16, bin_string.length());
+        } else{
+            return bin_string;
+        }
+    }
+
+    public String update32bitString(String res_inteira) {
+        StringBuilder sb = new StringBuilder();
+        int dif = 32 - res_inteira.length();
+        int cont = 0;
+        if( dif > 0){
+            while(cont < dif){
+                sb.append('0');
+                cont++;
+            }
+            return sb.toString().concat(res_inteira);
+        }
+        else{
+            return res_inteira;
+        }
+    }
+
+    public String reverseBinString(String str) {
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0; i < str.length(); i++){
+            if(str.charAt(i) == '0'){
+                sb.append('1');
+            }
+            else{
+                sb.append('0');
+            }
+        }
+        return sb.toString();
+    }
 }

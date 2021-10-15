@@ -64,17 +64,16 @@ public class Z808 extends Flags {
             qtde_inst2 = Integer.parseInt(sc.next());
             System.out.println("qtde_inst2 " + qtde_inst2);
 
-            Integer flag = 0;
-            for (int i = 0; i < qtde_dados1; i++ ){
-                Integer valor = Integer.parseInt(sc.next());//0000
-                index.add(flag);
-                Value novo = new Value(valor);//0000
-                System.out.println("valor " + valor);
-
-                memory.put(flag, novo);
-                flag = flag + 2;//anda as posições de 2 em 2
+            Integer nextPosition = 0;
+            for (int i = 0; i < qtde_dados1; i++) {
+                Integer value = Integer.parseInt(sc.next());//0000
+                index.add(nextPosition);
+                Value newValue = new Value(value);//0000
+                System.out.println("valor " + value);
+                memory.put(nextPosition, newValue);
+                nextPosition = nextPosition + 2;//anda as posições de 2 em 2
             }
-            loadInstructions(sc, flag, qtde_inst1);
+            loadInstructions(sc, nextPosition, qtde_inst1);
 
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Z808.class.getName()).log(Level.SEVERE, null, ex);
@@ -124,33 +123,31 @@ public class Z808 extends Flags {
             loadValues(sc, flag);
         }
     }
-    private void loadValues(Scanner sc, Integer flag) { //carrega valores
-        System.out.println("\nqtde_dados2 " + qtde_dados2);
 
-        for (int i = 0; i < qtde_dados2; i++ ){
-            Integer valor = Integer.parseInt(sc.next());
-            index.add(flag);
-            Value novo = new Value(valor);
-            memory.put(flag, novo);
-            flag = flag + 2;
+    private void loadValues(Scanner sc, Integer nextPosition) { //carrega valores
+        for (int i = 0; i < qtde_dados2; i++) {
+            Integer value = Integer.parseInt(sc.next());
+            index.add(nextPosition);
+            Value newValue = new Value(value);
+            memory.put(nextPosition, newValue);
+            nextPosition = nextPosition + 2;
         }
-        System.out.println("\nqtde_inst2 " + qtde_inst2);
 
-        loadInstructions(sc, flag, qtde_inst2);
+        loadInstructions(sc, nextPosition, qtde_inst2);
     }
 
-    public int loadStack(int tam_extra) {
-       int prox_index = index.get(index.size()-1) + 1;       //2º segmento TEM q terminar com hlt
+    public Integer loadStack(Integer size) {
+        Integer nextPosition = index.get(index.size() - 1) + 1;//2º segmento TEM q terminar com hlt
 
-       for (int cont=0; cont < tam_extra; cont++){
-           int valor = 0;
-           index.add(prox_index);
-           Value novo = new Value(valor);
-           memory.put(prox_index, novo);
-           prox_index = prox_index + 2;
+       for (int cont = 0; cont < size; cont++) {
+           Integer value = 0;
+           index.add(nextPosition);
+           Value newValue = new Value(value);
+           memory.put(nextPosition, newValue);
+           nextPosition = nextPosition + 2;
        }
-       //imprimeIndices();
-       return prox_index;
+
+       return nextPosition;
     }
 
     public int run(Instruction inst, JTextField label, Integer real_address) {
@@ -180,7 +177,7 @@ public class Z808 extends Flags {
                 System.out.println("tipo 1 segundo if"+ opcode);
 
                 String bin_lower = Integer.toBinaryString(AX);
-                bin_lower = ajusta_bin_string(bin_lower);
+                bin_lower = updateBinString(bin_lower);
                 String bin_higher = Integer.toBinaryString(DX);
                 
                 bin_higher = bin_higher.concat(bin_lower);
@@ -193,7 +190,7 @@ public class Z808 extends Flags {
                     bin_divisor = Integer.toBinaryString(AX); //div AX
                     label.setText("DIV AX");
                 }
-                bin_divisor = ajusta_bin_string(bin_divisor);
+                bin_divisor = updateBinString(bin_divisor);
                 int divisor = Integer.parseInt(bin_divisor, 2);
                 AX = dividendo/divisor;
                 DX = dividendo % divisor;
@@ -217,7 +214,7 @@ public class Z808 extends Flags {
                 System.out.println("tipo 1 quarto if"+ opcode);
 
                 String multiplicando = Integer.toBinaryString(AX);
-                multiplicando = ajusta_32bits(multiplicando);
+                multiplicando = update32bitString(multiplicando);
                 multiplicando = multiplicando.substring(16, 32);
                 String multiplicador;
                 if (opcode.charAt(3) == '6'){
@@ -231,7 +228,7 @@ public class Z808 extends Flags {
                 int fat2 = Integer.parseInt(multiplicador, 2);
                 int res = fat1*fat2;
                 String res_inteira = Integer.toBinaryString(res);
-                res_inteira = ajusta_32bits(res_inteira);
+                res_inteira = update32bitString(res_inteira);
                 DX = Integer.parseInt(res_inteira.substring(0, 16), 2);
                 AX = Integer.parseInt(res_inteira.substring(16, 32), 2);
                 updateFlags(AX);
@@ -259,8 +256,8 @@ public class Z808 extends Flags {
                 System.out.println("tipo 1 sexto if"+ opcode);
 
                 String valor = Integer.toBinaryString(AX);
-                valor = ajusta_32bits(valor);
-                valor = inverte_bin_string(valor.substring(16, 32));
+                valor = update32bitString(valor);
+                valor = reverseBinString(valor.substring(16, 32));
                 short s = (short)Integer.parseInt(valor, 2);
                 AX = (int)s;
                 IP = IP +2;
@@ -554,50 +551,4 @@ public class Z808 extends Flags {
             }
         }
      }
-
-    public String ajusta_bin_string(String bin_string) {
-        StringBuilder sb = new StringBuilder();
-        int dif = 16 - bin_string.length();
-        int cont = 0;
-        if( dif > 0){
-            while(cont < dif){
-                sb.append('0');
-                cont++;
-            }
-            return sb.toString().concat(bin_string);
-        } else if( dif < 0){
-            return bin_string.substring(bin_string.length()-16, bin_string.length());
-        } else{
-            return bin_string;
-        }
-    }
-
-    private String ajusta_32bits(String res_inteira) {
-        StringBuilder sb = new StringBuilder();
-        int dif = 32 - res_inteira.length();
-        int cont = 0;
-        if( dif > 0){
-            while(cont < dif){
-                sb.append('0');
-                cont++;
-            }
-            return sb.toString().concat(res_inteira);
-        }
-        else{
-            return res_inteira;
-        }
-    }
-
-    private String inverte_bin_string(String str) {
-        StringBuilder sb = new StringBuilder();
-        for(int i = 0; i < str.length(); i++){
-            if(str.charAt(i) == '0'){
-                sb.append('1');
-            }
-            else{
-                sb.append('0');
-            }
-        }
-        return sb.toString();
-    }
 }
