@@ -173,7 +173,7 @@ public class Z808 extends Flags {
                    AX = AX + AX;
                    label.setText("ADD AX,AX");
                }
-               ajusta_flags(AX);
+                updateFlags(AX);
                IP = IP +2;
                return -1;
             } else if(opcode.matches("F7F[60]")){//div ax OU div SI
@@ -210,7 +210,7 @@ public class Z808 extends Flags {
                     AX = AX - AX;
                     label.setText("SUB AX,AX");
                 }
-                ajusta_flags(AX);
+                updateFlags(AX);
                 IP = IP + 2;
                 return -1;
             } else if (opcode.matches("F7E[60]")) {   //mul si ou mul ax;
@@ -234,7 +234,7 @@ public class Z808 extends Flags {
                 res_inteira = ajusta_32bits(res_inteira);
                 DX = Integer.parseInt(res_inteira.substring(0, 16), 2);
                 AX = Integer.parseInt(res_inteira.substring(16, 32), 2);
-                ajusta_flags(AX);
+                updateFlags(AX);
                 IP = IP + 2;
                 return -1;
             }
@@ -245,7 +245,7 @@ public class Z808 extends Flags {
 
                 if(opcode.charAt(3) == '2'){  // and ax,dx
                     AX = AX & DX;
-                    ajusta_flags(AX);
+                    updateFlags(AX);
                     label.setText("AND AX,DX");
                 }
                 else{ //and ax, ax
@@ -264,7 +264,7 @@ public class Z808 extends Flags {
                 short s = (short)Integer.parseInt(valor, 2);
                 AX = (int)s;
                 IP = IP +2;
-                ajusta_flags(AX);
+                updateFlags(AX);
                 label.setText("NOT AX");
                 return -1;
             }
@@ -273,7 +273,7 @@ public class Z808 extends Flags {
 
                 if(opcode.charAt(3) == '2'){  // or ax,dx
                     AX = AX | DX;
-                    ajusta_flags(AX);
+                    updateFlags(AX);
                     label.setText("OR AX,DX");
                 }
                 else{ // não faz nada pq é o msm valor
@@ -287,7 +287,7 @@ public class Z808 extends Flags {
 
                 if(opcode.charAt(3) == '2'){  // xor ax,dx
                     AX = AX ^ DX;
-                    ajusta_flags(AX);
+                    updateFlags(AX);
                     label.setText("XOR AX,DX");
                 }
                 else{
@@ -315,12 +315,12 @@ public class Z808 extends Flags {
 
                 if(opcode.charAt(3) == '0'){ // mov ss,ax
                     SS = AX;
-                    ajusta_flags(SS);
+                    updateFlags(SS);
                     label.setText("MOV SS,AX");
                 }
                 else{
                    DS = AX;
-                   ajusta_flags(DS); 
+                    updateFlags(DS);
                    label.setText("MOV DS,AX");
                 }
                 IP = IP +2;
@@ -337,7 +337,7 @@ public class Z808 extends Flags {
                    AX = DS;
                    label.setText("MOV AX,DS");
                 }
-                ajusta_flags(AX);
+                updateFlags(AX);
                 IP = IP +2;
                 return -1;
             } else if(opcode.equalsIgnoreCase("8CC8")){    // mov ax,cs
@@ -356,14 +356,14 @@ public class Z808 extends Flags {
                     case '6': AX = SI; label.setText("MOV AX,SI"); break;
                     
                 }
-                ajusta_flags(AX);
+                updateFlags(AX);
                 IP = IP +2;
                 return -1;
             } else if(opcode.equalsIgnoreCase("8BE0")){  // mov sp,ax
                 System.out.println("tipo 1 - 14 if"+ opcode);
 
                 SP = AX;
-                ajusta_flags(SP);
+                updateFlags(SP);
                 IP = IP +2;
                 label.setText("MOV SP,AX");
                 return -1;
@@ -372,11 +372,11 @@ public class Z808 extends Flags {
 
                 if (opcode.charAt(2) == 'D'){
                     DX = AX;
-                    ajusta_flags(DX);
+                    updateFlags(DX);
                     label.setText("MOV DX,AX");
                 } else {
                     SI = AX;
-                    ajusta_flags(SI);
+                    updateFlags(SI);
                     label.setText("MOV SI,AX");
                 }
                 IP = IP +2;
@@ -386,7 +386,7 @@ public class Z808 extends Flags {
 
                 if(opcode.charAt(1) == 'B'){
                     AX = memory.get(SI).getValue();
-                    ajusta_flags(AX);
+                    updateFlags(AX);
                     IP = IP + 2;
                     label.setText("MOV AX,"+"["+SI+"]");
                     return -1;
@@ -438,31 +438,31 @@ public class Z808 extends Flags {
             /* INSTRUÇÕES ARITMÉTICAS */
             if (opcode.equalsIgnoreCase("05")) {  // add ax,cte
                 AX = AX + inst.getValue();
-                ajusta_flags(AX);
+                updateFlags(AX);
                 label.setText("ADD AX,#"+inst.getValue());
                 IP = IP +2;
                 return -1;
             } else if (opcode.equalsIgnoreCase("2D")) {   // sub ax,cte
                 AX = AX - inst.getValue();
-                ajusta_flags(AX);
+                updateFlags(AX);
                 label.setText("SUB AX,#"+inst.getValue());
                 IP = IP +2;
                 return -1;
             } else if (opcode.equalsIgnoreCase("25")) {  /* INSTRUÇÕES LÓGICAS */ // and ax,cte
                 AX = AX & inst.getValue();
-                ajusta_flags(AX);
+                updateFlags(AX);
                 label.setText("AND AX,#"+inst.getValue());
                 IP = IP +2;
                 return -1;
             } else if (opcode.equalsIgnoreCase("0D")) {   // or ax,cte
                 AX = AX | inst.getValue();
-                ajusta_flags(AX);
+                updateFlags(AX);
                 label.setText("OR AX,#"+inst.getValue());
                 IP = IP +2;
                 return -1;
             } else if(opcode.equalsIgnoreCase("35")){  // xor ax,cte
                 AX = AX ^ inst.getValue();
-                ajusta_flags(AX);
+                updateFlags(AX);
                 label.setText("XOR AX,#"+inst.getValue());
                 IP = IP +2;
                 return -1;
@@ -517,7 +517,7 @@ public class Z808 extends Flags {
                     //imprimememory();
                     int value = memory.get(real_address).getValue();
                     AX = value;
-                    ajusta_flags(AX);
+                    updateFlags(AX);
                     label.setText("MOV AX,"+inst.getValue());
                     return -1;
                 } else {  // mov mem, ax
@@ -531,7 +531,7 @@ public class Z808 extends Flags {
                 IP = IP +3;
                 if(opcode.charAt(1) == 'B'){  // mov ax,mem[si]
                     AX = memory.get(end_real).getValue();
-                    ajusta_flags(AX);
+                    updateFlags(AX);
                     label.setText("MOV AX,"+inst.getValue()+"["+SI+"]");
                     return -1;
                 }
@@ -544,7 +544,7 @@ public class Z808 extends Flags {
             }
             else if(opcode.equalsIgnoreCase("B8")){   // mov ax,cte
                 AX = inst.getValue();
-                ajusta_flags(AX);
+                updateFlags(AX);
                 IP = IP +2;
                 label.setText("MOV AX,#"+inst.getValue());
                 return -1;
@@ -555,7 +555,7 @@ public class Z808 extends Flags {
         }
      }
 
-    private String ajusta_bin_string(String bin_string) {
+    public String ajusta_bin_string(String bin_string) {
         StringBuilder sb = new StringBuilder();
         int dif = 16 - bin_string.length();
         int cont = 0;
@@ -570,36 +570,6 @@ public class Z808 extends Flags {
         } else{
             return bin_string;
         }
-    }
-
-    private void ajusta_flags(int destino) {
-        if((destino > Short.MAX_VALUE) || (destino < Short.MIN_VALUE)){
-            SR = SR | 4;
-        }
-        
-        if( destino == 0){
-            ZF = 1;
-            SF = 0;
-            //System.out.print("deu zero");
-            SR = SR | 2;
-            SR = SR & 6;
-            //System.out.printf("sr: %d", SR);
-        }
-        else{
-            ZF = 0;
-            // SR = SR & 5;
-            if( destino >= 0){
-                SF = 0;
-                SR = SR & 4;
-            }
-            else{
-                SF = 1;
-                SR = SR | 1;
-                SR = SR & 5;
-            }
-        }
-        
-        
     }
 
     private String ajusta_32bits(String res_inteira) {
@@ -629,11 +599,5 @@ public class Z808 extends Flags {
             }
         }
         return sb.toString();
-    }
-
-    private void imprimeIndex() {
-        for(int i = 0; i < index.size(); i++){
-            System.out.print("\n"+i+":"+index.get(i));
-        }
     }
 }

@@ -153,4 +153,27 @@ public class Flags {
     public void setQtde_inst2(int qtde_inst2) {
         this.qtde_inst2 = qtde_inst2;
     }
+
+    public void updateFlags(int destino) {
+        if ((destino > Short.MAX_VALUE) || (destino < Short.MIN_VALUE)) {
+            SR = SR | 4;
+        }
+
+        if (destino == 0) {
+            ZF = 1;
+            SF = 0;
+            SR = SR | 2;
+            SR = SR & 6;
+        } else {
+            ZF = 0;// SR = SR & 5;
+            if (destino > 0) {
+                SF = 0;
+                SR = SR & 4;
+            } else {
+                SF = 1;
+                SR = SR | 1;
+                SR = SR & 5;
+            }
+        }
+    }
 }
