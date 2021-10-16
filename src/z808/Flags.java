@@ -12,9 +12,9 @@ public class Flags {
     public Integer ZF;// ZF-ZERO
     public Integer SF; //, SF-SINAL
     public Integer SR;//SR-registrador de status, tem as flags OF,ZF e SF (as demais nao foram implementadas)
-    public Integer qtde_dados1, qtde_dados2, qtde_inst1, qtde_inst2, index_hlt;
+    public Integer constantsMemory, dataMemory, instructionMemory, index_hlt;
 
-    public Flags(Integer qtde_dados1, Integer qtde_dados2, Integer qtde_inst1, Integer qtde_inst2, Integer index_hlt,
+    public Flags(Integer constantsMemory, Integer dataMemory, Integer instructionMemory, Integer index_hlt,
         Integer SP, Integer IP, Integer AX, Integer DX, Integer SI, Integer DS, Integer SS, Integer CS, Integer ZF, Integer SF, Integer SR) {
 
         this.SP = SP;
@@ -28,10 +28,9 @@ public class Flags {
         this.ZF = ZF;
         this.SF = SF;
         this.SR = SR;
-        this.qtde_dados1 = qtde_dados1;
-        this.qtde_dados2 = qtde_dados2;
-        this.qtde_inst1 = qtde_inst1;
-        this.qtde_inst2 = qtde_inst2;
+        this.constantsMemory = constantsMemory;
+        this.dataMemory = dataMemory;
+        this.instructionMemory = instructionMemory;
         this.index_hlt = index_hlt;
     }
 
@@ -123,36 +122,28 @@ public class Flags {
         this.SI = SI;
     }
 
-    public int getQtde_dados1() {
-        return qtde_dados1;
+    public int getConstantsMemory() {
+        return constantsMemory;
     }
 
-    public void setQtde_dados1(int qtde_dados1) {
-        this.qtde_dados1 = qtde_dados1;
+    public void setConstantsMemory(int constantsMemory) {
+        this.constantsMemory = constantsMemory;
     }
 
-    public int getQtde_dados2() {
-        return qtde_dados2;
+    public int getDataMemory() {
+        return dataMemory;
     }
 
-    public void setQtde_dados2(int qtde_dados2) {
-        this.qtde_dados2 = qtde_dados2;
+    public void setDataMemory(int dataMemory) {
+        this.dataMemory = dataMemory;
     }
 
-    public int getQtde_inst1() {
-        return qtde_inst1;
+    public int getInstructionMemory() {
+        return instructionMemory;
     }
 
-    public void setQtde_inst1(int qtde_inst1) {
-        this.qtde_inst1 = qtde_inst1;
-    }
-
-    public int getQtde_inst2() {
-        return qtde_inst2;
-    }
-
-    public void setQtde_inst2(int qtde_inst2) {
-        this.qtde_inst2 = qtde_inst2;
+    public void setInstructionMemory(int instructionMemory) {
+        this.instructionMemory = instructionMemory;
     }
 
     public void updateFlags(Integer destino) {

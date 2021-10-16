@@ -351,7 +351,7 @@ public class Screen extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
     private void ExecutarBotaoActionPerformed(java.awt.event.ActionEvent evt) {
         String opcode;
-        //do{
+
             if((flag_para == 0) && !(IPVALOR.getText().isEmpty())){
                 int indice_linha = MemTable.getSelectedRow();
 
@@ -420,8 +420,7 @@ public class Screen extends javax.swing.JFrame {
                     }
                 }
             }
-            // model.
-            MemTable.setRowSelectionInterval(proc.getQtde_dados1(), proc.getQtde_dados1());
+            MemTable.setRowSelectionInterval(proc.getConstantsMemory(), proc.getConstantsMemory());
             proc.setIP(Indices.get(MemTable.getSelectedRow()));
             IPVALOR.setText(String.valueOf(proc.getIP()));
         }

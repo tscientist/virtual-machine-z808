@@ -22,9 +22,9 @@ public class Z808 extends Flags {
     private Hashtable<Integer,Key> memory;//Hashtable<Key,Value>
     private File entrada;
 
-    public Z808(Integer qtde_dados1, Integer qtde_dados2, Integer qtde_inst1, Integer qtde_inst2, Integer index_hlt,
+    public Z808(Integer constantsMemory, Integer dataMemory, Integer instructionMemory, Integer index_hlt,
                 Integer SP, Integer IP, Integer AX, Integer DX, Integer SI, Integer DS, Integer SS, Integer CS, Integer ZF, Integer SF, Integer SR) {
-        super(qtde_dados1, qtde_dados2, qtde_inst1, qtde_inst2, index_hlt, SP, IP, AX, DX, SI, DS, SS, CS, ZF, SF, SR);
+        super(constantsMemory, dataMemory, instructionMemory, index_hlt, SP, IP, AX, DX, SI, DS, SS, CS, ZF, SF, SR);
         this.memory = new Hashtable<Integer, Key>();
         this.index = new ArrayList<Integer>();
     }
@@ -57,19 +57,18 @@ public class Z808 extends Flags {
             Scanner sc = new Scanner(new FileReader(entrada)).useDelimiter("\\||\\n");
             Integer nextPosition = 0;
 
-            qtde_dados1 = Integer.parseInt(sc.next());// area de memoria reservada para constantes
-            qtde_inst1 = Integer.parseInt(sc.next());// area de instruções
-            qtde_dados2 = Integer.parseInt(sc.next());// area de memoria reservada para dados
-            qtde_inst2 = Integer.parseInt(sc.next());//area de instruções
+            constantsMemory = Integer.parseInt(sc.next());// area de memoria reservada para constantes
+            instructionMemory = Integer.parseInt(sc.next());// area de instruções
+            dataMemory = Integer.parseInt(sc.next());// area de memoria reservada para dados
 
-            for (int i = 0; i < qtde_dados1; i++) {
+            for (int i = 0; i < constantsMemory; i++) {
                 Integer value = Integer.parseInt(sc.next());
                 index.add(nextPosition);
                 Value newValue = new Value(value);
                 memory.put(nextPosition, newValue);
                 nextPosition = nextPosition + 2;
             }
-            loadInstructions(sc, nextPosition, qtde_inst1);
+            loadInstructions(sc, nextPosition, instructionMemory);
 
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Z808.class.getName()).log(Level.SEVERE, null, ex);
@@ -111,22 +110,18 @@ public class Z808 extends Flags {
             }
         }
 
-        if (qtde_inst == qtde_inst1) {
-            loadValues(sc, flag);
-        }
+        loadValues(sc, flag);
     }
 
     private void loadValues(Scanner sc, Integer nextPosition) { //carrega valores
 
-        for (int i = 0; i < qtde_dados2; i++) {
+        for (int i = 0; i < dataMemory; i++) {
             Integer value = Integer.parseInt(sc.next());
             index.add(nextPosition);
             Value newValue = new Value(value);
             memory.put(nextPosition, newValue);
             nextPosition = nextPosition + 2;
         }
-
-        loadInstructions(sc, nextPosition, qtde_inst2);
     }
 
     public Integer loadStack(Integer size) {
