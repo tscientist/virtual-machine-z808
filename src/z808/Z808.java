@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.nio.ByteBuffer;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Scanner;
@@ -56,10 +57,10 @@ public class Z808 extends Flags {
             Scanner sc = new Scanner(new FileReader(entrada)).useDelimiter("\\||\\n");
             Integer nextPosition = 0;
 
-            qtde_dados1 = Integer.parseInt(sc.next());
-            qtde_inst1 = Integer.parseInt(sc.next());
-            qtde_dados2 = Integer.parseInt(sc.next());
-            qtde_inst2 = Integer.parseInt(sc.next());
+            qtde_dados1 = Integer.parseInt(sc.next());// area de memoria reservada para constantes
+            qtde_inst1 = Integer.parseInt(sc.next());// area de instruções
+            qtde_dados2 = Integer.parseInt(sc.next());// area de memoria reservada para dados
+            qtde_inst2 = Integer.parseInt(sc.next());//area de instruções
 
             for (int i = 0; i < qtde_dados1; i++) {
                 Integer value = Integer.parseInt(sc.next());
@@ -102,7 +103,7 @@ public class Z808 extends Flags {
                 memory.put(flag, new_instruction);
                 if (opcode.equals("05") || opcode.equals("25") || opcode.equals("0D")|| opcode.equals("35")
                         || opcode.equals("EB") || opcode.equals("74")|| opcode.equals("75")|| opcode.equals("7A")
-                        || opcode.equals("E8") || opcode.equals("74")|| opcode.equals("75")|| opcode.equals("7A")){
+                        || opcode.equals("E8")){
                     flag = flag + 3;//3 bytes
                 } else {
                     flag = flag + 2;//2 bytes
@@ -371,6 +372,12 @@ public class Z808 extends Flags {
                     label.setText("XOR AX,#" + inst.getValue());
                     IP = IP +2;
                     return -1;
+                case "07C0":
+                    IP = IP +2;
+                    Key key = memory.get(inst.getValue());
+                    key.setValue(AX);
+                    label.setText("STORE "+inst.getValue()+",AX");
+                    return inst.getValue();
                 case "74":
                     switch(SR){
                         case 2: IP = inst.getValue(); break;
