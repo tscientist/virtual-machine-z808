@@ -87,19 +87,22 @@ public class Z808 extends Flags {
                 index.add(flag);
                 Instruction new_instruction = new Instruction(opcode, 1);
                 memory.put(flag, new_instruction);
-                if (opcode.equals("F4") || opcode.equals("58") || opcode.equals("50") || opcode.equals("9D") || opcode.equals("9C") || opcode.equals("C3")) {
-                    index_hlt = (opcode.equals("F4")) ? flag : index_hlt;
+                if (opcode.equals("9D") || opcode.equals("9C") || opcode.equals("EF") || opcode.equals("EE")) {
+                    index_hlt = (opcode.equals("EE")) ? flag : index_hlt;
                     flag++;
-                } else {//2 bytes sem memória
+                } else {//2 bytes
                     flag = flag + 2;
                 }
             } else {//2 tokens
                 opcode = st.nextToken();
                 value = Integer.parseInt(st.nextToken());
+
                 index.add(flag);
                 Instruction new_instruction = new Instruction(opcode, value, 2);
                 memory.put(flag, new_instruction);
-                if (opcode.equals("8984") || opcode.equals("8B84")){
+                if (opcode.equals("05") || opcode.equals("25") || opcode.equals("0D")|| opcode.equals("35")
+                        || opcode.equals("EB") || opcode.equals("74")|| opcode.equals("75")|| opcode.equals("7A")
+                        || opcode.equals("E8") || opcode.equals("74")|| opcode.equals("75")|| opcode.equals("7A")){
                     flag = flag + 3;//3 bytes
                 } else {
                     flag = flag + 2;//2 bytes
@@ -113,6 +116,7 @@ public class Z808 extends Flags {
     }
 
     private void loadValues(Scanner sc, Integer nextPosition) { //carrega valores
+
         for (int i = 0; i < qtde_dados2; i++) {
             Integer value = Integer.parseInt(sc.next());
             index.add(nextPosition);
@@ -142,37 +146,36 @@ public class Z808 extends Flags {
         Integer type = inst.getType();//tipo 1 = sem campo valor, tipo 2 = com campo valor
 
         String opcode = inst.getOpcode();
-
         if (type == 1) {  // INSTRUÇÕES SEM O CAMPO VALOR
             switch (opcode) {
-                case "03C0":
+                case "03C0": //TEM NO PDF
+                    AX = AX + AX;
+                    label.setText("ADD AX,AX");
+                    updateFlags(AX);
+                    IP = IP + 2;
+                    return -1;
+                case "03C2"://TEM NO PDF
                     AX = DX + AX;
                     label.setText("ADD AX,DX");
                     updateFlags(AX);
                     IP = IP + 2;
                     return -1;
-                case "03C2":
-                    AX = AX + AX;
-                    label.setText("ADD AX,AX");
-                    updateFlags(AX);
-                    IP = IP +2;
-                    return -1;
-                case "F7F6":
+                case "F7F6": //TEM NO PDF
                     String bin_lower = Integer.toBinaryString(AX);
                     bin_lower = updateBinString(bin_lower);
                     String bin_higher = Integer.toBinaryString(DX);
                     bin_higher = bin_higher.concat(bin_lower);
-                    int dividendo = Integer.parseInt(bin_higher, 2);
+                    Integer dividendo = Integer.parseInt(bin_higher, 2);
                     String bin_divisor;
                     bin_divisor = Integer.toBinaryString(SI);
                     label.setText("DIV SI");
                     bin_divisor = updateBinString(bin_divisor);
-                    int divisor = Integer.parseInt(bin_divisor, 2);
+                    Integer divisor = Integer.parseInt(bin_divisor, 2);
                     AX = dividendo/divisor;
                     DX = dividendo % divisor;
-                    IP = IP +2;
+                    IP = IP + 2;
                     return -1;
-                case "F7F0":
+                case "F7F0"://TEM NO PDF
                     String bin_lower2 = Integer.toBinaryString(AX);
                     bin_lower2 = updateBinString(bin_lower2);
                     String bin_higher2 = Integer.toBinaryString(DX);
@@ -185,22 +188,21 @@ public class Z808 extends Flags {
                     int divisor2 = Integer.parseInt(bin_divisor2, 2);
                     AX = dividendo2/divisor2;
                     DX = dividendo2 % divisor2;
-                    IP = IP +2;
+                    IP = IP + 2;
                     return -1;
-                case "2BC2":
+                case "2BC2"://TEM NO PDF
                     AX = AX - DX;
                     label.setText("SUB AX,DX");
                     updateFlags(AX);
                     IP = IP + 2;
                     return -1;
-                case "2BC0":
-                    System.out.println("Problema!");
+                case "2BC0"://TEM NO PDF
                     AX = AX - AX;
                     label.setText("SUB AX,AX");
                     updateFlags(AX);
                     IP = IP + 2;
                     return -1;
-                case "F7E6":
+                case "F7E6"://TEM NO PDF
                     String multiplicando = Integer.toBinaryString(AX);
                     multiplicando = update32bitString(multiplicando);
                     multiplicando = multiplicando.substring(16, 32);
@@ -217,13 +219,13 @@ public class Z808 extends Flags {
                     updateFlags(AX);
                     IP = IP + 2;
                     return -1;
-                case "F7E0":
+                case "F7E0"://TEM NO PDF //TODO: VERIFICAR OPERAÇÃO
                     String multiplicando2 = Integer.toBinaryString(AX);
                     multiplicando2 = update32bitString(multiplicando2);
                     multiplicando2 = multiplicando2.substring(16, 32);
                     String multiplicador2;
                     multiplicador2 = Integer.toBinaryString(SI);
-                    label.setText("MUL SI");
+                    label.setText("MUL AX");
                     int fat3 = Integer.parseInt(multiplicando2, 2);
                     int fat4 = Integer.parseInt(multiplicador2, 2);
                     int res2 = fat3*fat4;
@@ -234,159 +236,104 @@ public class Z808 extends Flags {
                     updateFlags(AX);
                     IP = IP + 2;
                     return -1;
-                case "23C2":
+                case "23C2"://TEM NO PDF //TODO: testar
                     AX = AX & DX;
                     updateFlags(AX);
                     label.setText("AND AX,DX");
                     IP = IP +2;
                     return -1;
-                case "23C0":
+                case "23C0"://TEM NO PDF
                     label.setText("AND AX,AX");
-                    AX = AX & AX; //não testei se funciona ainda
-                    IP = IP +2;
+                    AX = AX & AX;
+                    IP = IP + 2;
                     return -1;
-                case "F7D0":
+                case "F8C0"://era F7D0
                     String valor = Integer.toBinaryString(AX);
                     valor = update32bitString(valor);
                     valor = reverseBinString(valor.substring(16, 32));
                     short s = (short)Integer.parseInt(valor, 2);
-                    AX = (int)s;
+                    AX = (int) s;
                     IP = IP +2;
                     updateFlags(AX);
                     label.setText("NOT AX");
                     return -1;
-                case "0BC2":
+                case "0BC2"://TEM NO PDF
                     AX = AX | DX;
                     updateFlags(AX);
                     label.setText("OR AX,DX");
-                    IP = IP +2;
+                    IP = IP + 2;
                     return -1;
-                case "0BC0":
+                case "0BC0"://TEM NO PDF
                     label.setText("OR AX,AX");
-                    IP = IP +2;
+                    IP = IP + 2;
                     return -1;
-                case "33C2":
+                case "33C2"://TEM NO PDF
                     AX = AX ^ DX;
                     updateFlags(AX);
                     label.setText("XOR AX,DX");
                     IP = IP +2;
                     return -1;
-                case "33C0":
-                    AX = 0;            // n xor n = 0 sempre
+                case "33C0"://TEM NO PDF
+                    AX = 0;
                     ZF = 1;
                     label.setText("XOR AX,AX");
-                    IP = IP +2;
+                    IP = IP + 2;
                     return -1;
-                case "C3":
+                case "EF":
                     int end = SP;
                     Key algo1 = memory.get(end);
                     IP = algo1.getValue();
-                    SP = SP + 2;                    //nao sei se ret altera o valor do stack pointer..
+                    SP = SP + 2;
                     label.setText("RET");
                     return -1;
-                case "8ED0":
-                    SS = AX;
-                    updateFlags(SS);
-                    label.setText("MOV SS,AX");
-                    IP = IP +2;
-                    return -1;
-                case "8ED8":
-                    DS = AX;
-                    updateFlags(DS);
-                    label.setText("MOV DS,AX");
-                    IP = IP +2;
-                    return -1;
-                case "8CD0":
-                    AX = SS;
-                    label.setText("MOV AX,SS");
-                    updateFlags(AX);
-                    IP = IP +2;
-                    return -1;
-                case "8CD8":
-                    AX = DS;
-                    label.setText("MOV AX,DS");
-                    updateFlags(AX);
-                    IP = IP +2;
-                    return -1;
-                case "8CC8":
-                    AX = CS;
-                    label.setText("MOV AX,CS");
-                    IP = IP +2;
-                    return -1;
-                case "8BC2":
-                    AX = DX;
-                    label.setText("MOV AX,DX");
-                    updateFlags(AX);
-                    IP = IP +2;
-                    return -1;
-                case "8BC4":
-                    AX = SP;
-                    label.setText("MOV AX,SP");
-                    updateFlags(AX);
-                    IP = IP +2;
-                    return -1;
-                case "8BC6":
-                    AX = SI;
-                    label.setText("MOV AX,SI");
-                    updateFlags(AX);
-                    IP = IP +2;
-                    return -1;
-                case "8BE0":
-                    SP = AX;
-                    updateFlags(SP);
-                    IP = IP +2;
-                    label.setText("MOV SP,AX");
-                    return -1;
-                case "8BD0":
-                    DX = AX;
-                    updateFlags(DX);
-                    label.setText("MOV DX,AX");
-                    IP = IP +2;
-                    return -1;
-                case "8BF0":
-                    SI = AX;
-                    updateFlags(SI);
-                    label.setText("MOV SI,AX");
-                    IP = IP +2;
-                    return -1;
-                case "8B04":
-                    AX = memory.get(SI).getValue();
-                    updateFlags(AX);
-                    IP = IP + 2;
-                    label.setText("MOV AX,"+"["+SI+"]");
-                    return -1;
-                case "8904":
-                    Key algo2 = memory.get(SI);
-                    algo2.setValue(AX);
-                    IP = IP +2;
-                    label.setText("MOV ["+SI+"],AX");
-                    return SI;
-                case "58":
-                    try{
+                case "58C0":
+                    try {
                         AX = memory.get(SP).getValue();
-                        SP = SP +2;
+                        SP = SP + 2;
                         label.setText("POP AX");
+                    } catch(NullPointerException e) {
+                        JOptionPane.showMessageDialog(null, "Empty stack", "Erro", JOptionPane.ERROR_MESSAGE);
                     }
-                    catch(NullPointerException e){
-                        JOptionPane.showMessageDialog(null, "Pilha vazia", "Erro", JOptionPane.ERROR_MESSAGE);
-                    }
-                    IP = IP +1;
+                    IP = IP + 2;
                     return -1;
-                case "50":
+                case "58C2":
+                    try {
+                        DX = memory.get(SP).getValue();
+                        SP = SP + 2;
+                        label.setText("POP DX");
+                    } catch(NullPointerException e) {
+                        JOptionPane.showMessageDialog(null, "Empty stack", "Erro", JOptionPane.ERROR_MESSAGE);
+                    }
+                    IP = IP + 2;
+                    return -1;
+                case "50C0":
                     SP = SP -2;
-                    if ( SP > index_hlt) {                        //só pode empilhar se a pilha nao estiver invadindo area de dados, delimitada pelo indice do hlt
-                        Key algo3 = memory.get(SP);
-                        algo3.setValue(AX);
+                    if ( SP > index_hlt) {
+                        Key key = memory.get(SP);
+                        key.setValue(AX);
                         label.setText("PUSH AX");
-                        IP = IP +1;       // IP +1 pq é uma Instruction de um byte só
+                        IP = IP +1;
                         return SP;
                     } else {
-                        JOptionPane.showMessageDialog(null, "Pilha invadiu área de dados!!!", "Erro", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, "Stack error", "Error", JOptionPane.ERROR_MESSAGE);
                         SP = SP +2;
                         IP = IP +1;
                         return -1;
                     }
-
+                case "50C2":
+                    SP = SP - 2;
+                    if ( SP > index_hlt) {
+                        Key key = memory.get(SP);
+                        key.setValue(DX);
+                        label.setText("PUSH DX");
+                        IP = IP + 2;
+                        return SP;
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Stack error", "Error", JOptionPane.ERROR_MESSAGE);
+                        SP = SP + 2;
+                        IP = IP + 2;
+                        return -1;
+                    }
                 default:
                     label.setText("HLT");
                     IP = IP +2;
@@ -397,40 +344,40 @@ public class Z808 extends Flags {
                 case "05":
                     AX = AX + inst.getValue();
                     updateFlags(AX);
-                    label.setText("ADD AX,#"+inst.getValue());
-                    IP = IP +2;
+                    label.setText("ADD AX,#" + inst.getValue());
+                    IP = IP + 3;
                     return -1;
-                case "2D":
-                    AX = AX - inst.getValue();
-                    updateFlags(AX);
-                    label.setText("SUB AX,#"+inst.getValue());
-                    IP = IP +2;
-                    return -1;
-                case "25":
+                case "26":
                     AX = AX & inst.getValue();
                     updateFlags(AX);
-                    label.setText("AND AX,#"+inst.getValue());
-                    IP = IP +2;
+                    label.setText("AND AX, " + inst.getValue());
+                    IP = IP + 3;
+                    return -1;
+                case "25":
+                    AX = AX - inst.getValue();
+                    updateFlags(AX);
+                    label.setText("SUB AX,#" + inst.getValue());
+                    IP = IP + 3;
                     return -1;
                 case "0D":
                     AX = AX | inst.getValue();
                     updateFlags(AX);
-                    label.setText("OR AX,#"+inst.getValue());
-                    IP = IP +2;
+                    label.setText("OR AX,#" + inst.getValue());
+                    IP = IP + 3;
                     return -1;
                 case "35":
                     AX = AX ^ inst.getValue();
                     updateFlags(AX);
-                    label.setText("XOR AX,#"+inst.getValue());
+                    label.setText("XOR AX,#" + inst.getValue());
                     IP = IP +2;
                     return -1;
                 case "74":
                     switch(SR){
                         case 2: IP = inst.getValue(); break;
                         case 6: IP = inst.getValue(); break;
-                        default  : IP = IP +2; break;
+                        default  : IP = IP + 3; break;
                     }
-                    label.setText("JZ "+inst.getValue());
+                    label.setText("JZ "+ inst.getValue());
                     return -1;
                 case "75":
                     switch(SR){
@@ -438,19 +385,19 @@ public class Z808 extends Flags {
                         case 1: IP = inst.getValue(); break;
                         case 4: IP = inst.getValue(); break;
                         case 5: IP = inst.getValue(); break;
-                        default : IP = IP +2; break;
+                        default : IP = IP + 3; break;
                     }
                     label.setText("JNZ "+inst.getValue());
                     return -1;
-                case "76":
-                    switch(SR){
+                case "7A": //ERA 76
+                    switch(SR) {
                         case 0: IP = inst.getValue(); break;
                         case 2: IP = inst.getValue(); break;
                         case 4: IP = inst.getValue(); break;
                         case 6: IP = inst.getValue(); break;
                         default : IP = IP +2; break;
                     }
-                    label.setText("JP "+inst.getValue());
+                    label.setText("JP " + inst.getValue());
                     return -1;
                 case "EB":
                     IP = inst.getValue();
@@ -461,42 +408,8 @@ public class Z808 extends Flags {
                     Key algo = memory.get(SP);
                     algo.setValue(IP + 2);
                     IP = inst.getValue();
-                    label.setText("CALL "+inst.getValue());
+                    label.setText("CALL " + inst.getValue());
                     return SP;
-                case "A1":
-                    IP = IP +2;
-                    int value = memory.get(real_address).getValue();
-                    AX = value;
-                    updateFlags(AX);
-                    label.setText("MOV AX,"+inst.getValue());
-                    return -1;
-                case "A3":
-                    IP = IP +2;
-                    Key key = memory.get(inst.getValue());
-                    key.setValue(AX);
-                    label.setText("MOV "+inst.getValue()+",AX");
-                    return inst.getValue();
-                case "8B84":
-                    int end_real = SI + inst.getValue();
-                    IP = IP +3;
-                    AX = memory.get(end_real).getValue();
-                    updateFlags(AX);
-                    label.setText("MOV AX,"+inst.getValue()+"["+SI+"]");
-                    return -1;
-                case "8984":
-                    int end_real2 = SI + inst.getValue();
-                    IP = IP +3;
-                    Key algo2 = memory.get(end_real2);
-                    algo2.setValue(AX);
-                    label.setText("MOV "+inst.getValue()+"["+SI+"], AX");
-                    return end_real2;
-                case "B8":
-                    AX = inst.getValue();
-                    updateFlags(AX);
-                    IP = IP +2;
-                    label.setText("MOV AX,#"+inst.getValue());
-                    return -1;
-
                 default:
                     IP = IP;
                     return -1;

@@ -371,7 +371,7 @@ public class Screen extends javax.swing.JFrame {
                     opcode = "Dado";
                 }
 
-                if(opcode.equals("F4")){
+                if (opcode.equals("EE")){
                     flag_para = 1;
                 }
                 else{

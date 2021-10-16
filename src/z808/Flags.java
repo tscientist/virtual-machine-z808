@@ -9,8 +9,8 @@ public class Flags {
     public Integer DS;// DS-Segmento de Dados
     public Integer SS;// SS-Segmento de Pilha
     public Integer CS;//CS-Segmento de Código
-    public Integer ZF;
-    public Integer SF; // ZF-ZERO, SF-SINAL
+    public Integer ZF;// ZF-ZERO
+    public Integer SF; //, SF-SINAL
     public Integer SR;//SR-registrador de status, tem as flags OF,ZF e SF (as demais nao foram implementadas)
     public Integer qtde_dados1, qtde_dados2, qtde_inst1, qtde_inst2, index_hlt;
 
