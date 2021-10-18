@@ -147,8 +147,6 @@ public class Flags {
     }
 
     public void updateFlags(Integer destino) {
-        if ((destino > Short.MAX_VALUE) || (destino < Short.MIN_VALUE)) SR = SR | 4;
-
         if (destino == 0) {
             ZF = 1;
             SF = 0;
