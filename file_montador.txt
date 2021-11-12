@@ -1,0 +1,21 @@
+add AX AX
+sub ax 12
+mul ax
+div dx
+or ax ax
+and dx ax
+xor ax ax
+not ax
+jmp 42
+je 2
+jnz ax
+jz dx
+jp ax
+mov ax dx
+hlt
+dado1 dw 13
+dado2 dw -12
+dado3 dw 0
+dado4 dw 1
+dado5 dw 9999
+dado6 dw -500
