@@ -358,12 +358,11 @@ public class Builder {
 
                 String delims = " ";
                 String[] tokens = str.split(delims);
-                for(int i=0; i< tokens.length; i++){
-                    if(tokens[i].compareTo("DW") == 0)
-                    {
-                        lista.put(tokens[i-1], new String(tokens[i+1]));
-                    }
+                if(tokens[1].compareTo("DW") == 0)
+                {
+                    lista.put(tokens[0], tokens[2]);
                 }
+
             }//Fim while leitura do arquivo
             in.close();
 
