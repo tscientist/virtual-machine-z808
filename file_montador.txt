@@ -11,8 +11,6 @@ je 2
 jnz ax
 jz dx
 jp ax
-mov ax dx
-hlt
 dado1 dw 13
 dado2 dw -12
 dado3 dw 0
