@@ -1,0 +1,11 @@
+SOMAMEM VAR1, V
+
+
+aux_labels
+SOMAMEM	/0 
+VAR1,	/1
+V	/2
+
+aux_linha
+SOMAMEM	/0
+VAR1, V	/1

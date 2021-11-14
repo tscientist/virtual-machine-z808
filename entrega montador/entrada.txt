@@ -1,0 +1,28 @@
+Dados SEGMENT
+Var1 DW 5
+Var2 DW 8
+Var3 DW 3
+Dados ENDS
+       
+Codigo SEGMENT
+ASSUME CS: Codigo
+ASSUME DS: Dados
+SomaMem MACRO Mem1, Mem2 ;;COMENTARIO DE TESTE
+add  AX, Mem1
+add  AX, Mem2
+add  DX, AX
+ENDM
+       
+Inicio:
+sub AX, Var1
+and AX, 2
+mul DX
+not AX
+xor AX, DX
+xor AX, 10
+jz 45
+copy 10 20
+SomaMem Var1, Var2
+stop
+CODIGO ENDS
+END Inicio
