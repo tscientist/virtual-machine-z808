@@ -144,19 +144,19 @@ public class Z808 extends Flags {
         String opcode = inst.getOpcode();
         if (type == 1) {  // INSTRUÇÕES SEM O CAMPO VALOR
             switch (opcode) {
-                case "03C0":
+                case "03 C0":
                     AX = AX + AX;
                     label.setText("ADD AX,AX");
                     updateFlags(AX);
                     IP = IP + 2;
                     return -1;
-                case "03C2":
+                case "03 C2":
                     AX = DX + AX;
                     label.setText("ADD AX,DX");
                     updateFlags(AX);
                     IP = IP + 2;
                     return -1;
-                case "F7F6":
+                case "F7 F6":
                     String bin_lower = Integer.toBinaryString(AX);
                     bin_lower = updateBinString(bin_lower);
                     String bin_higher = Integer.toBinaryString(DX);
@@ -171,7 +171,7 @@ public class Z808 extends Flags {
                     DX = dividendo % divisor;
                     IP = IP + 2;
                     return -1;
-                case "F7F0":
+                case "F7 F0":
                     String bin_lower2 = Integer.toBinaryString(AX);
                     bin_lower2 = updateBinString(bin_lower2);
                     String bin_higher2 = Integer.toBinaryString(DX);
@@ -186,19 +186,19 @@ public class Z808 extends Flags {
                     DX = dividendo2 % divisor2;
                     IP = IP + 2;
                     return -1;
-                case "2BC2":
+                case "2B C2":
                     AX = AX - DX;
                     label.setText("SUB AX,DX");
                     updateFlags(AX);
                     IP = IP + 2;
                     return -1;
-                case "2BC0":
+                case "2B C0":
                     AX = AX - AX;
                     label.setText("SUB AX,AX");
                     updateFlags(AX);
                     IP = IP + 2;
                     return -1;
-                case "F7E6":
+                case "F7 E6":
                     String multiplicando = Integer.toBinaryString(AX);
                     multiplicando = update32bitString(multiplicando);
                     multiplicando = multiplicando.substring(16, 32);
@@ -215,7 +215,7 @@ public class Z808 extends Flags {
                     updateFlags(AX);
                     IP = IP + 2;
                     return -1;
-                case "F7E0": //TODO: VERIFICAR OPERAÇÃO
+                case "F7 E0": //TODO: VERIFICAR OPERAÇÃO
                     String multiplicando2 = Integer.toBinaryString(AX);
                     multiplicando2 = update32bitString(multiplicando2);
                     multiplicando2 = multiplicando2.substring(16, 32);
@@ -232,18 +232,25 @@ public class Z808 extends Flags {
                     updateFlags(AX);
                     IP = IP + 2;
                     return -1;
-                case "23C2": //TODO: testar
+                case "3B C2": // novo: CMP AX,DX
+                    if (AX == DX)
+                        ZF = 1;
+                    else
+                        ZF = 0;
+                    updateFlags(ZF);
+                    return -1;
+                case "23 C2": //TODO: testar
                     AX = AX & DX;
                     updateFlags(AX);
                     label.setText("AND AX,DX");
                     IP = IP +2;
                     return -1;
-                case "23C0":
+                case "23 C0":
                     label.setText("AND AX,AX");
                     AX = AX & AX;
                     IP = IP + 2;
                     return -1;
-                case "F8C0":
+                case "F7 D0":
                     String valor = Integer.toBinaryString(AX);
                     valor = update32bitString(valor);
                     valor = reverseBinString(valor.substring(16, 32));
@@ -253,34 +260,34 @@ public class Z808 extends Flags {
                     updateFlags(AX);
                     label.setText("NOT AX");
                     return -1;
-                case "0BC2":
+                case "0B C2":
                     AX = AX | DX;
                     updateFlags(AX);
                     label.setText("OR AX,DX");
                     IP = IP + 2;
                     return -1;
-                case "0BC0":
+                case "0B C0":
                     label.setText("OR AX,AX");
                     IP = IP + 2;
                     return -1;
-                case "33C2":
+                case "33 C2":
                     AX = AX ^ DX;
                     updateFlags(AX);
                     label.setText("XOR AX,DX");
                     IP = IP +2;
                     return -1;
-                case "33C0":
+                case "33 C0":
                     AX = 0;
                     ZF = 1;
                     label.setText("XOR AX,AX");
                     IP = IP + 2;
                     return -1;
-                case "EF":
+                case "C3":
                     int end = SP;
                     Key algo1 = memory.get(end);
                     IP = algo1.getValue();
                     SP = SP + 2;
-                    label.setText("RET");
+                    label.setText("ret");
                     return -1;
                 case "58C0":
                     try {

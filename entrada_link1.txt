@@ -19,5 +19,6 @@ jz 45
 SomaMem Var1, Var2
 and AX, Var3
 mul AX
+stop
 CODIGO ENDS
 END Inicio

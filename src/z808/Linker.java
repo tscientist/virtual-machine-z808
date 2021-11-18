@@ -9,33 +9,21 @@ public class Linker {
 
 }
 
-public void link()
+    HashMap<String, String> tbs;
+    HashMap<String, String> tbs_aux;
+
+public void link(String arq1, String arq2)
 {
     try {
         String replace;
         String[] aux;
-        HashMap<String, String> tbs = new HashMap<>();
-        HashMap<String, String> tbs_aux;
-        HashMap<String, String> tbs_aux2 = new HashMap<>();
-
-        Macro macro1 = new Macro();
-        Builder montador1 = new Builder();
-        macro1.run("entrada_link1.txt");
-        montador1.Builder("entrada_link1_macro_processed.txt");
-        tbs = montador1.getLista();
-
-        Macro macro2 = new Macro();
-        Builder montador2 = new Builder();
-        macro2.run("entrada_link2.txt");
-        montador2.Builder("entrada_link2_macro_processed.txt");
-        tbs_aux = montador2.getLista();
-
-        tbs.putAll(tbs_aux);
 
 
+        linkPassOne(arq1, arq2);
 
-        BufferedReader file1 = new BufferedReader(new FileReader("entrada_link1_montada.txt")); //Lê na raiz do projeto
-        BufferedReader file2 = new BufferedReader(new FileReader("entrada_link2_montada.txt")); //Lê na raiz do projeto
+
+        BufferedReader file1 = new BufferedReader(new FileReader(arq1.concat("_montada.txt"))); //Lê na raiz do projeto
+        BufferedReader file2 = new BufferedReader(new FileReader(arq2.concat("_montada.txt"))); //Lê na raiz do projeto
         String str;
         ArrayList<String> instructions = new ArrayList<>();
 
@@ -46,7 +34,8 @@ public void link()
 
         while (file1.ready()) {
             str = file1.readLine().toUpperCase();
-            instructions.add(str);
+            if (str.compareTo("11") != 0)
+                instructions.add(str);
         }
         while (file2.ready()) {
             str = file2.readLine().toUpperCase();
@@ -92,6 +81,22 @@ public void link()
     } catch (Exception e) {
         e.printStackTrace();
     }
+}
+
+public void linkPassOne (String arq1, String arq2){
+    Macro macro1 = new Macro();
+    Builder montador1 = new Builder();
+    macro1.run(arq1.concat(".txt"));
+    montador1.Builder(arq1.concat("_macro_processed.txt"));
+    tbs = montador1.getLista();
+
+    Macro macro2 = new Macro();
+    Builder montador2 = new Builder();
+    macro2.run(arq2.concat(".txt"));
+    montador2.Builder(arq2.concat("_macro_processed.txt"));
+    tbs_aux = montador2.getLista();
+
+    tbs.putAll(tbs_aux);
 }
 }
 

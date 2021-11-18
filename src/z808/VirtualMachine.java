@@ -17,9 +17,9 @@ public class VirtualMachine {
         //*/
 
         Linker ligador = new Linker();
-        ligador.link();
+        ligador.link("entrada_link1", "entrada_link2");
 
-        /*
+        //*
         Z808 proc = new Z808(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
         Screen fr = new Screen(proc);
         fr.setVisible(true);

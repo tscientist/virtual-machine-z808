@@ -34,8 +34,7 @@ public class Builder {
             while (in.ready()) {
                 i = 0;
                 str = in.readLine().toUpperCase();
-                str = str.replace(",", " ");
-                str = str.replace("  ", " ");
+
 
                 String[] tokens = str.split(" ");
 
@@ -272,11 +271,11 @@ public class Builder {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        /*
         for (String key : lista.keySet()) {
             System.out.println(key + " " + lista.get(key));
         }
-
+        */
         return lista;
     }
 }
