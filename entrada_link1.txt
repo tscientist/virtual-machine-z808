@@ -14,10 +14,10 @@ ENDM
        
 Inicio:
 and AX, Var1
-and AX, Var3
+sub AX, Var3
 mul AX
 xor AX, 10
-jz 19
+jz 18
 SomaMem Var1, Var2
 stop
 CODIGO ENDS

@@ -70,8 +70,6 @@ public class Builder {
                             bw.newLine();
                             break;
                         case "SUB":
-                            //System.out.println("SUB");
-
                             if (tokens[1].compareTo("AX") != 0) {
                                 bw.write("06 " + tokens[1]);
                                 bw.newLine();

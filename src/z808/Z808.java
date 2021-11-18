@@ -274,7 +274,7 @@ public class Z808 extends Flags {
                     AX = AX ^ DX;
                     updateFlags(AX);
                     label.setText("XOR AX,DX");
-                    IP = IP +2;
+                    IP = IP + 2;
                     return -1;
                 case "33C0":
                     AX = 0;
@@ -360,7 +360,7 @@ public class Z808 extends Flags {
                     AX = AX - inst.getValue();
                     updateFlags(AX);
                     label.setText("SUB AX,#" + inst.getValue());
-                    IP = IP + 3;
+                    IP = IP + 2;
                     return -1;
                 case "0D":
                     AX = AX | inst.getValue();
