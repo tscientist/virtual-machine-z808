@@ -12,12 +12,10 @@ add  AX, Mem2
 ENDM
        
 Inicio:
-sub AX, Var4
-xor AX, 10
-jz 45
+add AX, Var4
+and AX, 10
 SomaMem2 Var1, Var4
 or AX, Var5
-div AX
 stop
 CODIGO ENDS
 END Inicio

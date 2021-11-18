@@ -10,12 +10,15 @@ import java.util.ArrayList;
 
 public class Loader {
     public void Loader() {
+    }
+
+    public void loader(){
         try {
-            BufferedReader in = new BufferedReader(new FileReader("entrada_montada.txt")); //Lê na raiz do projeto
+            BufferedReader in = new BufferedReader(new FileReader("entrada_linked.txt")); //Lê na raiz do projeto
             String str;
             ArrayList<String> instructions = new ArrayList<>();
 
-            File arqObjeto = new File("test4.txt");
+            File arqObjeto = new File("entrada_loaded.txt");
             arqObjeto.createNewFile();
             FileWriter escritor = new FileWriter(arqObjeto);
             BufferedWriter bw = new BufferedWriter(escritor);
