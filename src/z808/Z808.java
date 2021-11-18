@@ -355,6 +355,12 @@ public class Z808 extends Flags {
                     label.setText("SUB AX,#" + inst.getValue());
                     IP = IP + 3;
                     return -1;
+                case "25"://duplicado do 2D
+                    AX = AX - inst.getValue();
+                    updateFlags(AX);
+                    label.setText("SUB AX,#" + inst.getValue());
+                    IP = IP + 3;
+                    return -1;
                 case "0D":
                     AX = AX | inst.getValue();
                     updateFlags(AX);
@@ -362,10 +368,15 @@ public class Z808 extends Flags {
                     IP = IP + 3;
                     return -1;
                 case "35":
-                    AX = AX ^ inst.getValue();
+//                    AX = AX ^ inst.getValue();
+//                    updateFlags(AX);
+//                    label.setText("XOR AX,#" + inst.getValue());
+//                    IP = IP +2;
+//                    return -1;
+                    AX = AX | inst.getValue();//0D
                     updateFlags(AX);
                     label.setText("XOR AX,#" + inst.getValue());
-                    IP = IP +2;
+                    IP = IP + 3;
                     return -1;
                 case "07C0":
                     IP = IP +2;

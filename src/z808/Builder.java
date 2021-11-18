@@ -77,7 +77,7 @@ public class Builder {
                             } else if(tokens[2].compareTo("DX") == 0) {
                                 bw.write("2BC2"); //SUB AX, DX
                             } else {
-                                bw.write("2D " + tokens[2]); //SUB AX, opt
+                                bw.write("25 " + tokens[2]); //SUB AX, opt
                             }
                             bw.newLine();
                             break;
@@ -187,7 +187,8 @@ public class Builder {
                             break;
                         case "COPY":
                             System.out.println("COPY");
-                            bw.write("13 " + tokens[1] + " " + tokens[2]);
+//                            bw.write("13 " + tokens[1] + " " + tokens[2]);//07C0
+                            bw.write("07C0 " + tokens[1]);//07C0
                             bw.newLine();
                             break;
                         case "DIVIDE":
@@ -234,6 +235,7 @@ public class Builder {
             }//Fim while leitura do arquivo
             in.close();
             bw.close();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
