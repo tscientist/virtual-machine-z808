@@ -362,6 +362,12 @@ public class Z808 extends Flags {
                     label.setText("SUB AX,#" + inst.getValue());
                     IP = IP + 2;
                     return -1;
+                case "25"://ERA 25
+                    AX = AX - inst.getValue();
+                    updateFlags(AX);
+                    label.setText("SUB AX,#" + inst.getValue());
+                    IP = IP + 3;
+                    return -1;
                 case "0D":
                     AX = AX | inst.getValue();
                     updateFlags(AX);
