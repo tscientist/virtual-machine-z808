@@ -12,7 +12,7 @@ public class Flags {
     public Integer ZF;// ZF-ZERO
     public Integer SF; //, SF-SINAL
     public Integer SR;//SR-registrador de status, tem as flags OF,ZF e SF (as demais nao foram implementadas)
-    public Integer constantsMemory, dataMemory, instructionMemory, index_hlt;
+    public int constantsMemory, dataMemory, instructionMemory, index_hlt;
 
     public Flags(Integer constantsMemory, Integer dataMemory, Integer instructionMemory, Integer index_hlt,
         Integer SP, Integer IP, Integer AX, Integer DX, Integer SI, Integer DS, Integer SS, Integer CS, Integer ZF, Integer SF, Integer SR) {

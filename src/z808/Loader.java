@@ -30,11 +30,11 @@ public class Loader {
                 instructions.add(str);
             }
 
-            bw.write(variableQnt);
+            bw.write(variableQnt + "-");
             bw.newLine();
-            bw.write(String.valueOf(instructions.size()));
+            bw.write(String.valueOf(instructions.size()) + "-");
             bw.newLine();
-            bw.write(variableQnt);
+            bw.write(variableQnt + "-");
             bw.newLine();
             bw.write(variablesValue);
             bw.newLine();
