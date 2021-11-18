@@ -9,19 +9,24 @@ import java.util.HashMap;
 
 public class Builder {
     private short memoria[] = new short[256];
+    HashMap<String, String> lista = new HashMap<>();
 
-    public void Builder(){
+    public HashMap<String, String> getLista() {
+        return lista;
+    }
+
+    public void Builder(String file){
         int i = 0;
 
         try {
 
-            HashMap<String, String> lista = new HashMap<>();
-            lista = passOne(lista);
 
-            BufferedReader in = new BufferedReader(new FileReader("entrada_macro_processed.txt")); //Lê na raiz do projeto
+            lista = passOne(lista, file);
+
+            BufferedReader in = new BufferedReader(new FileReader(file)); //Lê na raiz do projeto
             String str;
 
-            File arqObjeto = new File("entrada_montada.txt");
+            File arqObjeto = new File(file.split("[.]")[0].concat("_montada.txt"));
             arqObjeto.createNewFile();
             FileWriter escritor = new FileWriter(arqObjeto);
             BufferedWriter bw = new BufferedWriter(escritor);
@@ -241,11 +246,11 @@ public class Builder {
         }
     }
 
-    public HashMap<String, String> passOne (HashMap<String, String> lista)
+    public HashMap<String, String> passOne (HashMap<String, String> lista, String file)
     {
         try {
 
-            BufferedReader in = new BufferedReader(new FileReader("entrada_macro_processed.txt")); //Lê na raiz do projeto
+            BufferedReader in = new BufferedReader(new FileReader(file)); //Lê na raiz do projeto
             String str;
 
             while (in.ready()) {
