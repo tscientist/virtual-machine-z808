@@ -1,4 +1,4 @@
-## Processador de Macros Z808
+## Sistema Computacional Hipotético Z808
 Implementação da máquina virtual(emulador) do sistema computacional Z808, composto por dois módulos: o executor e a interface visual. Projeto criado para a disciplina de **Programação de Sistemas**, o emulador foi desenvolvido em conjunto utilizando a linguagem **Java**.
 
 ## Descrição do processador
