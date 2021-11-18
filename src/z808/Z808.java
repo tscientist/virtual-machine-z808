@@ -349,7 +349,7 @@ public class Z808 extends Flags {
                     label.setText("AND AX, " + inst.getValue());
                     IP = IP + 3;
                     return -1;
-                case "25":
+                case "2D"://ERA 25
                     AX = AX - inst.getValue();
                     updateFlags(AX);
                     label.setText("SUB AX,#" + inst.getValue());
