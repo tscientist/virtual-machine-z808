@@ -20,9 +20,7 @@ public class Macro {
 
         List<Macro> macros = new ArrayList<>();
         File arquivo_entrada = new File(diretorio);
-        String nome_saida = arquivo_entrada.getName().split("[.]")[0];
-        nome_saida = nome_saida.concat("_macro_processed.txt");
-        File arquivo_saida = new File(nome_saida);
+        File arquivo_saida = new File(diretorio.split("[.]")[0].concat("_macro_processed.txt"));
 
         List<String> linhas_entrada = new ArrayList<>();
 

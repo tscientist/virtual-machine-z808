@@ -1,4 +1,4 @@
-package z808;
+package z808.z808;
 
 import z808.z808.Flags;
 
@@ -350,12 +350,6 @@ public class Z808 extends Flags {
                     IP = IP + 3;
                     return -1;
                 case "2D"://ERA 25
-                    AX = AX - inst.getValue();
-                    updateFlags(AX);
-                    label.setText("SUB AX,#" + inst.getValue());
-                    IP = IP + 3;
-                    return -1;
-                case "25"://duplicado do 2D
                     AX = AX - inst.getValue();
                     updateFlags(AX);
                     label.setText("SUB AX,#" + inst.getValue());

@@ -34,8 +34,8 @@ public void link()
 
 
 
-        BufferedReader file1 = new BufferedReader(new FileReader("entrada_link1_macro_processed_montada.txt")); //Lê na raiz do projeto
-        BufferedReader file2 = new BufferedReader(new FileReader("entrada_link2_macro_processed_montada.txt")); //Lê na raiz do projeto
+        BufferedReader file1 = new BufferedReader(new FileReader("entrada_link1_montada.txt")); //Lê na raiz do projeto
+        BufferedReader file2 = new BufferedReader(new FileReader("entrada_link2_montada.txt")); //Lê na raiz do projeto
         String str;
         ArrayList<String> instructions = new ArrayList<>();
 

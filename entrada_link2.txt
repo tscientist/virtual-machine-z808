@@ -1,5 +1,6 @@
 Dados SEGMENT
 Var4 DW 7
+Var5 DW 10
 Dados ENDS
        
 Codigo SEGMENT
@@ -15,6 +16,8 @@ sub AX, Var4
 xor AX, 10
 jz 45
 SomaMem2 Var1, Var4
+or AX, Var5
+div AX
 stop
 CODIGO ENDS
 END Inicio

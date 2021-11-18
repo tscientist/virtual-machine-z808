@@ -17,6 +17,7 @@ sub AX, Var1
 xor AX, 10
 jz 45
 SomaMem Var1, Var2
-stop
+and AX, Var3
+mul AX
 CODIGO ENDS
 END Inicio

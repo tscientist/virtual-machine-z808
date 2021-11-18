@@ -1,4 +1,4 @@
-package z808;
+package z808.z808;
 
 public class Key { //interface
     private Integer value;
