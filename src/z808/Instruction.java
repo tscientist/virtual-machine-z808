@@ -1,5 +1,5 @@
 
-package z808.z808;
+package z808;
 
 public class Instruction extends Key {
     private Integer type; //tipo 1 = sem campo valor, tipo 2 = com campo valor

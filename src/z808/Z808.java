@@ -1,6 +1,6 @@
-package z808.z808;
+package z808;
 
-import z808.z808.Flags;
+import z808.Flags;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -361,12 +361,6 @@ public class Z808 extends Flags {
                     updateFlags(AX);
                     label.setText("SUB AX,#" + inst.getValue());
                     IP = IP + 2;
-                    return -1;
-                case "25"://ERA 25
-                    AX = AX - inst.getValue();
-                    updateFlags(AX);
-                    label.setText("SUB AX,#" + inst.getValue());
-                    IP = IP + 3;
                     return -1;
                 case "0D":
                     AX = AX | inst.getValue();

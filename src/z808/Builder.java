@@ -1,4 +1,4 @@
-package z808.z808;
+package z808;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
