@@ -126,10 +126,10 @@ public class Screen extends javax.swing.JFrame {
             }
         });
 
-        LinkarBotao.setText("LINK");
+        LinkarBotao.setText("LINK/LOAD");
         LinkarBotao.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ExecutarBotaoActionPerformed(evt);
+                LinkarBotaoActionPerformed(evt);
             }
         });
 
