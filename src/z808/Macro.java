@@ -123,6 +123,9 @@ public class Macro {
             if ("ENDM".equals(linhas_entrada.get(0)))
                 linhas_entrada.remove(0);
             for (String iterator : linhas_entrada) {                            //escreve no arquivo de saida o codigo expandido
+                iterator = iterator.replace(",", " ");
+                iterator = iterator.replace("  ", " ");
+
                 escrever.write(iterator);
                 escrever.newLine();
             }

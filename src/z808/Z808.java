@@ -232,6 +232,13 @@ public class Z808 extends Flags {
                     updateFlags(AX);
                     IP = IP + 2;
                     return -1;
+                case "3BC2": // novo: CMP AX,DX
+                    if (AX == DX)
+                        ZF = 1;
+                    else
+                        ZF = 0;
+                    updateFlags(ZF);
+                    return -1;
                 case "23C2": //TODO: testar
                     AX = AX & DX;
                     updateFlags(AX);
@@ -243,7 +250,7 @@ public class Z808 extends Flags {
                     AX = AX & AX;
                     IP = IP + 2;
                     return -1;
-                case "F8C0":
+                case "F7D0":
                     String valor = Integer.toBinaryString(AX);
                     valor = update32bitString(valor);
                     valor = reverseBinString(valor.substring(16, 32));
@@ -267,7 +274,7 @@ public class Z808 extends Flags {
                     AX = AX ^ DX;
                     updateFlags(AX);
                     label.setText("XOR AX,DX");
-                    IP = IP +2;
+                    IP = IP + 2;
                     return -1;
                 case "33C0":
                     AX = 0;
@@ -275,12 +282,12 @@ public class Z808 extends Flags {
                     label.setText("XOR AX,AX");
                     IP = IP + 2;
                     return -1;
-                case "EF":
+                case "C3":
                     int end = SP;
                     Key algo1 = memory.get(end);
                     IP = algo1.getValue();
                     SP = SP + 2;
-                    label.setText("RET");
+                    label.setText("ret");
                     return -1;
                 case "58C0":
                     try {
@@ -343,13 +350,19 @@ public class Z808 extends Flags {
                     label.setText("ADD AX,#" + inst.getValue());
                     IP = IP + 3;
                     return -1;
-                case "26":
+                case "25":
                     AX = AX & inst.getValue();
                     updateFlags(AX);
                     label.setText("AND AX, " + inst.getValue());
                     IP = IP + 3;
                     return -1;
                 case "2D"://ERA 25
+                    AX = AX - inst.getValue();
+                    updateFlags(AX);
+                    label.setText("SUB AX,#" + inst.getValue());
+                    IP = IP + 2;
+                    return -1;
+                case "25"://ERA 25
                     AX = AX - inst.getValue();
                     updateFlags(AX);
                     label.setText("SUB AX,#" + inst.getValue());
@@ -362,12 +375,7 @@ public class Z808 extends Flags {
                     IP = IP + 3;
                     return -1;
                 case "35":
-//                    AX = AX ^ inst.getValue();
-//                    updateFlags(AX);
-//                    label.setText("XOR AX,#" + inst.getValue());
-//                    IP = IP +2;
-//                    return -1;
-                    AX = AX | inst.getValue();//0D
+                    AX = AX ^ inst.getValue();
                     updateFlags(AX);
                     label.setText("XOR AX,#" + inst.getValue());
                     IP = IP + 3;

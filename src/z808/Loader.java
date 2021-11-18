@@ -10,12 +10,17 @@ import java.util.ArrayList;
 
 public class Loader {
     public void Loader() {
+    }
+    String variableQnt = "1";
+    String variablesValue = "0000";
+
+    public void loader(){
         try {
-            BufferedReader in = new BufferedReader(new FileReader("entrada_montada.txt")); //Lê na raiz do projeto
+            BufferedReader in = new BufferedReader(new FileReader("entrada_linked.txt")); //Lê na raiz do projeto
             String str;
             ArrayList<String> instructions = new ArrayList<>();
 
-            File arqObjeto = new File("test4.txt");
+            File arqObjeto = new File("entrada_loaded.txt");
             arqObjeto.createNewFile();
             FileWriter escritor = new FileWriter(arqObjeto);
             BufferedWriter bw = new BufferedWriter(escritor);
@@ -25,13 +30,13 @@ public class Loader {
                 instructions.add(str);
             }
 
-            bw.write("1");
+            bw.write(variableQnt);
             bw.newLine();
             bw.write(String.valueOf(instructions.size()));
             bw.newLine();
-            bw.write("1");
+            bw.write(variableQnt);
             bw.newLine();
-            bw.write("0000");
+            bw.write(variablesValue);
             bw.newLine();
 
             for (int i = 0; i < instructions.size(); i++) {
@@ -39,7 +44,7 @@ public class Loader {
                 bw.newLine();
             }
 
-            bw.write("0000");
+            bw.write(variablesValue);
             bw.newLine();
             in.close();
             bw.close();

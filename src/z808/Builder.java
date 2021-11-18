@@ -34,8 +34,7 @@ public class Builder {
             while (in.ready()) {
                 i = 0;
                 str = in.readLine().toUpperCase();
-                str = str.replace(",", " ");
-                str = str.replace("  ", " ");
+
 
                 String[] tokens = str.split(" ");
 
@@ -53,9 +52,9 @@ public class Builder {
                         case "ADD":
                             //System.out.println("ADD");
                             if (tokens[2].compareTo("DX") == 0) {
-                                bw.write("03 C2");//ADD AX, DX
+                                bw.write("03C2");//ADD AX, DX
                             } else if (tokens[2].compareTo("AX") == 0) {
-                                bw.write("03 C0");//ADD AX, AX
+                                bw.write("03C0");//ADD AX, AX
                             } else {
                                 bw.write("05 " + tokens[2]);//ADD AX, reg
                             }
@@ -64,23 +63,21 @@ public class Builder {
                         case "DIV":
                             //System.out.println("DIV");
                             if (tokens[1].compareTo("SI") == 0) {
-                                bw.write("F7 F6");//DIV AX, SI
+                                bw.write("F7F6");//DIV AX, SI
                             } else {
-                                bw.write("F7 F0");//DIV AX, AX
+                                bw.write("F7F0");//DIV AX, AX
                             }
                             bw.newLine();
                             break;
                         case "SUB":
-                            //System.out.println("SUB");
-
                             if (tokens[1].compareTo("AX") != 0) {
                                 bw.write("06 " + tokens[1]);
                                 bw.newLine();
                                 break;
                             } else if(tokens[2].compareTo("AX") == 0) {
-                                bw.write("2B C0"); //SUB AX, AX
+                                bw.write("2BC0"); //SUB AX, AX
                             } else if(tokens[2].compareTo("DX") == 0) {
-                                bw.write("2B C2"); //SUB AX, DX
+                                bw.write("2BC2"); //SUB AX, DX
                             } else {
                                 bw.write("2D " + tokens[2]); //SUB AX, opt
                             }
@@ -89,16 +86,16 @@ public class Builder {
                         case "MUL":
                             //System.out.println("MUL");
                             if (tokens[1].compareTo("SI") == 0) {
-                                bw.write("F7 E6");//MUL AX, SI
+                                bw.write("F7E6");//MUL AX, SI
                             } else {
-                                bw.write("F7 E0");//MUL AX, AX
+                                bw.write("F7E0");//MUL AX, AX
                             }
                             bw.newLine();
                             break;
                         case "CMP":
                             //System.out.println("CMP");
                             if(tokens[2].compareTo("DX") == 0) {
-                                bw.write("3B C2");
+                                bw.write("3BC2");
                             } else {
                                 bw.write("3D " + tokens[i+2]);
                             }
@@ -108,9 +105,9 @@ public class Builder {
                         case "AND":
                             //System.out.println("AND");
                             if (tokens[2].compareTo("DX") == 0) {
-                                bw.write("23 C2");
+                                bw.write("23C2");
                             } else if(tokens[2].compareTo("AX") == 0) {
-                                bw.write("23 C0");
+                                bw.write("23C0");
                             } else {
                                 bw.write("25 " + tokens[2]);
                             }
@@ -119,15 +116,15 @@ public class Builder {
                             break;
                         case "NOT":
                             //System.out.println("NOT");
-                            bw.write("F7 D0");
+                            bw.write("F7D0");
                             bw.newLine();
                             break;
                         case "OR":
                             //System.out.println("OR");
                             if(tokens[2].compareTo("DX") == 0) {
-                                bw.write("0B C2");
+                                bw.write("0BC2");
                             } else if(tokens[2].compareTo("AX") == 0) {
-                                bw.write("0B C0");
+                                bw.write("0BC0");
                             } else {
                                 bw.write("0D " + tokens[2]);
                             }
@@ -136,9 +133,9 @@ public class Builder {
                         case "XOR":
                             //System.out.println("XOR");
                             if (tokens[2].compareTo("DX") == 0) {
-                                bw.write("33 C2");
+                                bw.write("33C2");
                             } else if(tokens[2].compareTo("AX") == 0) {
-                                bw.write("33 C0");
+                                bw.write("33C0");
                             } else {
                                 bw.write("35 " + tokens[2]);
                             }
@@ -162,7 +159,7 @@ public class Builder {
                         case "JZ":
                             //System.out.println("JZ");
                             //DUPLICADO, ALTERADO DE 74 PRA 76
-                            bw.write("76 " + tokens[1]);
+                            bw.write("7A " + tokens[1]);
                             bw.newLine();
                             break;
                         case "JP":
@@ -272,11 +269,11 @@ public class Builder {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        /*
         for (String key : lista.keySet()) {
             System.out.println(key + " " + lista.get(key));
         }
-
+        */
         return lista;
     }
 }
