@@ -9,6 +9,7 @@ ASSUME DS: Dados
 SomaMem2 MACRO Mem1, Mem2 ;;COMENTARIO DE TESTE
 add  AX, Mem1
 add  AX, Mem2
+xor AX, Var4
 ENDM
        
 Inicio:

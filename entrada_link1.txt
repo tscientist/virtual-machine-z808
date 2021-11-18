@@ -16,6 +16,7 @@ Inicio:
 and AX, Var1
 and AX, Var3
 mul AX
+xor AX, 10
 jz 19
 SomaMem Var1, Var2
 stop
