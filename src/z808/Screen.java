@@ -462,7 +462,8 @@ public class Screen extends javax.swing.JFrame {
     }
 
     private void AbrirBotaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AbrirBotaoActionPerformed
-        jFileChooser1 = new JFileChooser("/Users/lgcantarelli/Projects/z808-maquina");   //cria o jfilechooser
+        File rootFolder = new File("");
+        jFileChooser1 = new JFileChooser(rootFolder.getAbsolutePath());
         jFileChooser1.setAcceptAllFileFilterUsed(false);  //nao deixa ele mostrar all files
         jFileChooser1.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);  //mostrar apenas diretorios e arquivos
         jFileChooser1.addChoosableFileFilter(new MyFilter());    //atrela ao filtro myfilter (pra mostrar apenas .asm e diretorios)
@@ -480,7 +481,8 @@ public class Screen extends javax.swing.JFrame {
     private void LinkarBotaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_AbrirBotaoActionPerformed
         Linker ligador = new Linker();
         ligador.link("entrada_link1","entrada_link2");
-
+        Loader carregador = new Loader();
+        carregador.loader();
     }
 
     private javax.swing.JLabel AXVALOR;
