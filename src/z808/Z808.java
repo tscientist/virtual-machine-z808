@@ -76,9 +76,6 @@ public class Z808 extends Flags {
             instructionMemory = Integer.parseInt(sc.next().replaceAll("[^\\d.]", ""));// area de instruções
             dataMemory = Integer.parseInt(sc.next().replaceAll("[^\\d.]", ""));// area de memoria reservada para dados
 
-            System.out.println(constantsMemory);
-            System.out.println(instructionMemory);
-            System.out.println(dataMemory);
 
             for (int i = 0; i < constantsMemory; i++) {
                 Integer value = parseInt(sc.next().replaceAll("[^\\d.]", ""));
