@@ -60,14 +60,6 @@ public class Z808 extends Flags {
 
     public void loadFirstData() { //pega os primeiros 4 valores do arquivo
 
-        String testestr="99";
-        int teste=99;
-/*
-        System.out.println("Teste int: "+ teste + " Teste str: " + testestr);
-        testestr = "9";
-        teste = Integer.parseInt(testestr);
-        System.out.println("Teste int: "+ teste + " Teste str: " + testestr);
-*/
         try {
             Scanner sc = new Scanner(new FileReader(entrada)).useDelimiter("\\||\\n");
             Integer nextPosition = 0;
