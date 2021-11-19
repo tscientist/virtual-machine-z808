@@ -1,4 +1,4 @@
-package z808.z808;
+package z808;
 
 public class Flags {
     public Integer SP;// SP-STACK POINTER,

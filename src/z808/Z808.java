@@ -1,6 +1,6 @@
-package z808.z808;
+package z808;
 
-import z808.z808.Flags;
+import z808.Flags;
 
 import java.io.File;
 import java.io.FileNotFoundException;
