@@ -16,6 +16,12 @@ import java.util.logging.Logger;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JOptionPane;
+import java.lang.*;
+import java.lang.Integer;
+import java.lang.NumberFormatException;
+
+import static java.lang.Integer.parseInt;
+import static java.lang.Integer.valueOf;
 
 public class Z808 extends Flags {
     private ArrayList<Integer> index;
@@ -53,16 +59,18 @@ public class Z808 extends Flags {
     }
 
     public void loadFirstData() { //pega os primeiros 4 valores do arquivo
+
         try {
             Scanner sc = new Scanner(new FileReader(entrada)).useDelimiter("\\||\\n");
             Integer nextPosition = 0;
 
-            constantsMemory = Integer.parseInt(sc.next());// area de memoria reservada para constantes
-            instructionMemory = Integer.parseInt(sc.next());// area de instruções
-            dataMemory = Integer.parseInt(sc.next());// area de memoria reservada para dados
+            constantsMemory = Integer.parseInt(sc.next().replaceAll("[^\\d.]", ""));// area de memoria reservada para constantes
+            instructionMemory = Integer.parseInt(sc.next().replaceAll("[^\\d.]", ""));// area de instruções
+            dataMemory = Integer.parseInt(sc.next().replaceAll("[^\\d.]", ""));// area de memoria reservada para dados
+
 
             for (int i = 0; i < constantsMemory; i++) {
-                Integer value = Integer.parseInt(sc.next());
+                Integer value = parseInt(sc.next().replaceAll("[^\\d.]", ""));
                 index.add(nextPosition);
                 Value newValue = new Value(value);
                 memory.put(nextPosition, newValue);
@@ -95,7 +103,7 @@ public class Z808 extends Flags {
                 }
             } else {//2 tokens
                 opcode = st.nextToken();
-                value = Integer.parseInt(st.nextToken());
+                value = parseInt(st.nextToken());
 
                 index.add(flag);
                 Instruction new_instruction = new Instruction(opcode, value, 2);
@@ -116,7 +124,7 @@ public class Z808 extends Flags {
     private void loadValues(Scanner sc, Integer nextPosition) { //carrega valores
 
         for (int i = 0; i < dataMemory; i++) {
-            Integer value = Integer.parseInt(sc.next());
+            Integer value = parseInt(sc.next().replaceAll("[^\\d.]", ""));
             index.add(nextPosition);
             Value newValue = new Value(value);
             memory.put(nextPosition, newValue);
@@ -161,12 +169,12 @@ public class Z808 extends Flags {
                     bin_lower = updateBinString(bin_lower);
                     String bin_higher = Integer.toBinaryString(DX);
                     bin_higher = bin_higher.concat(bin_lower);
-                    Integer dividendo = Integer.parseInt(bin_higher, 2);
+                    Integer dividendo = parseInt(bin_higher, 2);
                     String bin_divisor;
                     bin_divisor = Integer.toBinaryString(SI);
                     label.setText("DIV SI");
                     bin_divisor = updateBinString(bin_divisor);
-                    Integer divisor = Integer.parseInt(bin_divisor, 2);
+                    Integer divisor = parseInt(bin_divisor, 2);
                     AX = dividendo/divisor;
                     DX = dividendo % divisor;
                     IP = IP + 2;
@@ -176,12 +184,12 @@ public class Z808 extends Flags {
                     bin_lower2 = updateBinString(bin_lower2);
                     String bin_higher2 = Integer.toBinaryString(DX);
                     bin_higher2 = bin_higher2.concat(bin_lower2);
-                    int dividendo2 = Integer.parseInt(bin_higher2, 2);
+                    int dividendo2 = parseInt(bin_higher2, 2);
                     String bin_divisor2;
                     bin_divisor2 = Integer.toBinaryString(AX); //div AX
                     label.setText("DIV AX");
                     bin_divisor2 = updateBinString(bin_divisor2);
-                    int divisor2 = Integer.parseInt(bin_divisor2, 2);
+                    int divisor2 = parseInt(bin_divisor2, 2);
                     AX = dividendo2/divisor2;
                     DX = dividendo2 % divisor2;
                     IP = IP + 2;
@@ -205,13 +213,13 @@ public class Z808 extends Flags {
                     String multiplicador;
                     multiplicador = Integer.toBinaryString(SI);
                     label.setText("MUL SI");
-                    int fat1 = Integer.parseInt(multiplicando, 2);
-                    int fat2 = Integer.parseInt(multiplicador, 2);
+                    int fat1 = parseInt(multiplicando, 2);
+                    int fat2 = parseInt(multiplicador, 2);
                     int res = fat1*fat2;
                     String res_inteira = Integer.toBinaryString(res);
                     res_inteira = update32bitString(res_inteira);
-                    DX = Integer.parseInt(res_inteira.substring(0, 16), 2);
-                    AX = Integer.parseInt(res_inteira.substring(16, 32), 2);
+                    DX = parseInt(res_inteira.substring(0, 16), 2);
+                    AX = parseInt(res_inteira.substring(16, 32), 2);
                     updateFlags(AX);
                     IP = IP + 2;
                     return -1;
@@ -222,13 +230,13 @@ public class Z808 extends Flags {
                     String multiplicador2;
                     multiplicador2 = Integer.toBinaryString(SI);
                     label.setText("MUL AX");
-                    int fat3 = Integer.parseInt(multiplicando2, 2);
-                    int fat4 = Integer.parseInt(multiplicador2, 2);
+                    int fat3 = parseInt(multiplicando2, 2);
+                    int fat4 = parseInt(multiplicador2, 2);
                     int res2 = fat3*fat4;
                     String res_inteira2 = Integer.toBinaryString(res2);
                     res_inteira = update32bitString(res_inteira2);
-                    DX = Integer.parseInt(res_inteira.substring(0, 16), 2);
-                    AX = Integer.parseInt(res_inteira.substring(16, 32), 2);
+                    DX = parseInt(res_inteira.substring(0, 16), 2);
+                    AX = parseInt(res_inteira.substring(16, 32), 2);
                     updateFlags(AX);
                     IP = IP + 2;
                     return -1;
@@ -254,7 +262,7 @@ public class Z808 extends Flags {
                     String valor = Integer.toBinaryString(AX);
                     valor = update32bitString(valor);
                     valor = reverseBinString(valor.substring(16, 32));
-                    short s = (short)Integer.parseInt(valor, 2);
+                    short s = (short) parseInt(valor, 2);
                     AX = (int) s;
                     IP = IP +2;
                     updateFlags(AX);
@@ -362,6 +370,12 @@ public class Z808 extends Flags {
                     label.setText("SUB AX,#" + inst.getValue());
                     IP = IP + 2;
                     return -1;
+//                case "25"://ERA 25
+//                    AX = AX - inst.getValue();
+//                    updateFlags(AX);
+//                    label.setText("SUB AX,#" + inst.getValue());
+//                    IP = IP + 3;
+//                    return -1;
                 case "0D":
                     AX = AX | inst.getValue();
                     updateFlags(AX);

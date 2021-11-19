@@ -1,6 +1,6 @@
 
-package z808;
-import z808.*;
+package z808.z808;
+import z808.z808.*;
 
 public class VirtualMachine {
     public static void main(String[] args) {
